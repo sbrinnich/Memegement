@@ -2,3 +2,6 @@
 doc/corporate_identity/Thumbs.db
 
 doc/erdiagramm.dia~
+
+#Jetbrains IDE
+.idea/
