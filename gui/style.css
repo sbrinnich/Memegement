@@ -7,5 +7,42 @@
 body {
 	margin: 0;
     font: initial !important;
-	background-color: #FFFFCC;
+	background-color: #ffffff;
+}
+
+.navbar-nav > li > a, .navbar-brand {
+    height: 22px;
+}
+.navbar {min-height:22px !important;}
+
+#index_login {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#index_content {
+    margin-top: 50px;
+}
+
+.index_panel {
+    background: #1e5799; /* Old browsers */
+    background: -moz-linear-gradient(45deg, #1e5799 0%, #2989d8 50%, #7db9e8 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(45deg, #1e5799 0%,#2989d8 50%,#7db9e8 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(45deg, #1e5799 0%,#2989d8 50%,#7db9e8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.index_panelbody {
+    text-align: center;
+    font-size: 36px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.index_panelleft {
+    margin-right: 10px;
+}
+
+.index_panelright {
+    margin-left: 10px;
 }

@@ -29,10 +29,10 @@ GO
 -- Create Tables
 
 Create table Troll (
-  benutzername varchar not null primary key,
+  benutzerName varchar not null primary key,
   passwortHash varchar not null,
   beitrittsDatum date not null,
-  profilbild int
+  profilBild int
 );
 
 Create table FunObjekt (
@@ -96,5 +96,5 @@ GO
 
 -- Add missing foreign key constraints
 
-Alter table Troll add constraint fkTrollProfilbild foreign key (profilbild) references Bild(funObjektId);
+Alter table Troll add constraint fkTrollProfilbild foreign key (profilBild) references Bild(funObjektId);
 GO
