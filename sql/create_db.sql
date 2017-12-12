@@ -40,7 +40,7 @@ Create table FunObjekt (
   titel varchar not null,
   uploadDatum date not null,
   durchschnittsBewertung float,
-  erstellerName varchar foreign key references Troll(benutzername)
+  erstellerName varchar not null foreign key references Troll(benutzername)
 );
 
 Create table Bild (
@@ -65,8 +65,8 @@ Create table Gruppe (
   name varchar not null,
   beschreibung varchar,
   gruendungsDatum date not null,
-  gruenderName varchar foreign key references Troll(benutzername),
-  gruppenBild int foreign key references Bild(funObjektId)
+  gruenderName varchar not null foreign key references Troll(benutzername),
+  gruppenBild int not null foreign key references Bild(funObjektId)
 );
 
 Create table Bewertung (
