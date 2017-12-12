@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Memegement - Bilder</title>
+    <title>Memegement - Witze</title>
 
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="Pragma" content="no-cache"/>
@@ -34,9 +34,9 @@
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="index.php">Home</a></li>
-                <li class="active"><a href="#">Bilder</a></li>
+                <li><a href="bilder.php">Bilder</a></li>
                 <li><a href="videos.php">Videos</a></li>
-                <li><a href="witze.php">Witze</a></li>
+                <li class="active"><a href="#">Witze</a></li>
                 <li><a href="gruppen.php">Gruppen</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -48,7 +48,7 @@
 <!-- END NAVBAR -->
 
 <!-- CONTENT -->
-<div class="container" id="bilder_content">
+<div class="container" id="witze_content">
 
 </div>
 <!-- END CONTENT -->

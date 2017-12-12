@@ -39,11 +39,11 @@
 
                     <div class="collapse navbar-collapse" id="navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Index</a></li>
-                            <li><a href="#">Bilder</a></li>
-                            <li><a href="#">Videos</a></li>
-                            <li><a href="#">Witze</a></li>
-                            <li><a href="#">Gruppen</a></li>
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="bilder.php">Bilder</a></li>
+                            <li><a href="videos.php">Videos</a></li>
+                            <li><a href="witze.php">Witze</a></li>
+                            <li><a href="gruppen.php">Gruppen</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="#" id="index_login">Login</a></li>
@@ -54,40 +54,48 @@
             <!-- END NAVBAR -->
 
             <!-- CONTENT -->
-            <div class="container-fluid" id="index_content">
+            <div class="container" id="index_content">
                 <div class="row">
                     <div class="col-md-2"></div>
                     <div class="col-md-3">
-                        <div class="panel panel-default index_panel">
-                            <div class="panel-body index_panelbody index_panelleft">
-                                Bilder
+                        <a href="bilder.php" class="index_link">
+                            <div class="panel panel-default index_panel">
+                                <div class="panel-body index_panelbody index_panelleft">
+                                    Bilder
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
-                        <div class="panel panel-default index_panel">
-                            <div class="panel-body index_panelbody index_panelright">
-                                Videos
+                        <a href="videos.php" class="index_link">
+                            <div class="panel panel-default index_panel">
+                                <div class="panel-body index_panelbody index_panelright">
+                                    Videos
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-2"></div>
                     <div class="col-md-3">
-                        <div class="panel panel-default index_panel">
-                            <div class="panel-body index_panelbody index_panelleft">
-                                Witze
+                        <a href="witze.php" class="index_link">
+                            <div class="panel panel-default index_panel">
+                                <div class="panel-body index_panelbody index_panelleft">
+                                    Witze
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
-                        <div class="panel panel-default index_panel">
-                            <div class="panel-body index_panelbody index_panelright">
-                                Gruppen
+                        <a href="gruppen.php" class="index_link">
+                            <div class="panel panel-default index_panel">
+                                <div class="panel-body index_panelbody index_panelright">
+                                    Gruppen
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
