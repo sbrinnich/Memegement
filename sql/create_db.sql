@@ -29,7 +29,7 @@ GO
 -- Create Tables
 
 Create table Troll (
-  benutzerName varchar not null primary key,
+  benutzerName varchar not null primary key, -- vll hier keinen varchar als pk sondern eine ID und den Namen unique machen
   passwortHash varchar not null,
   beitrittsDatum date not null,
   profilBild int
