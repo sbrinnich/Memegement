@@ -60,13 +60,23 @@ Insert into Witz (funObjektId, text) VALUES
   ( 60002 , 'Geht eine schwangere Frau in eine Bäckerei und sagt: \"Ich krieg ein Brot.\" - Darauf der Bäcker: "Sachen gibt´s!' );
 
 Insert into Gruppe (id, name, beschreibung, gruendungsDatum, gruenderName, gruppenBild) values
-  ();
+  (1, 'Troll Meme Boys' , 'Leute mit Troll Usernamen' , '2010-10-20' , 'Troll1' , 1 );
 
 Insert into Bewertung (bewerterName, bewertungsObjekt, bewertung, bewertungsDatum) values
-  ();
+  ( 'Troll1' , 1 , 3 , '2011-10-20' ),
+  ( 'Troll2' , 1 , 4 , '2011-10-20' );
 
 Insert into Kommentar (kommentiererName, kommentarObjekt, erstellungsDatum, text) values
-  ();
+  ( 'Troll3' , 1 , '2011-10-21' , 'Ich liebe dieses Bild' );
 
 Insert into GruppenMitgliedschaft (trollName, gruppenId, beitrittsDatum) values
-  ();
+  ( 'Troll1' , 1 , '2010-10-20' ),
+  ( 'Troll1' , 1 , '2011-10-20' ),
+  ( 'Troll1' , 1 , '2012-01-10' ),
+  ( 'Troll1' , 1 , '2013-04-14' ),
+  ( 'Troll1' , 1 , '2014-11-25' ),
+  ( 'Troll1' , 1 , '2014-11-25' ),
+  ( 'Troll1' , 1 , '2016-03-20' ),
+  ( 'Troll1' , 1 , '2017-09-09' ),
+  ( 'Troll1' , 1 , '2017-10-10' ),
+  ( 'Troll1' , 1 , '2017-12-31' );
