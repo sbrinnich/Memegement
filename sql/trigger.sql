@@ -9,14 +9,5 @@ CREATE TRIGGER  tr_newRating
   FOR INSERT
 AS
   DECLARE @BewertungsObjekt int = (Select bewertungsObjekt FROM inserted)
-
-IF EXISTS(SELECT bewertungsObjekt FROM inserted)
-  UPDATE Memegement.dbo.FunObjekt SET durchschnittsBewertung = (SELECT avg(bewertung) FROM Bewertung WHERE bewertungsObjekt = @BewertungsObjekt)
-    WHERE id = @BewertungsObjekt;
-
-ELSE
-  DECLARE @Username VARCHAR
-  DECLARE @Title VARCHAR
-  INSERT INTO Memegement.dbo.FunObjekt (titel, uploadDatum , durchschnittsBewertung, erstellerName) VALUES
-    (@Title, (SELECT CONVERT (date, SYSDATETIME())), 0, @Username );
-
+UPDATE Memegement.dbo.FunObjekt SET durchschnittsBewertung = (SELECT avg(bewertung) FROM Bewertung WHERE bewertungsObjekt = @BewertungsObjekt)
+WHERE id = @BewertungsObjekt;
