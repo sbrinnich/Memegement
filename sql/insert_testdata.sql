@@ -2,35 +2,36 @@ Use Memegement;
 GO
 
 --delete all constraints
+ALTER TABLE Troll
+  DROP CONSTRAINT  fk_trollProfilbild;
 ALTER TABLE FunObjekt
-  DROP CONSTRAINT IF EXISTS fkErstellerName;
+  DROP CONSTRAINT  fk_erstellerName;
 ALTER TABLE Bild
-  DROP CONSTRAINT IF EXISTS fk_funObjektID;
+  DROP CONSTRAINT  fk_bildFunObjektID;
 ALTER TABLE Video
-  DROP CONSTRAINT IF EXISTS fk_funObjektID;
+  DROP CONSTRAINT  fk_videoFunObjektID;
 ALTER TABLE Witz
-  DROP CONSTRAINT IF EXISTS fk_funObjektID;
+  DROP CONSTRAINT  fk_witzFunObjektID;
 ALTER TABLE Gruppe
-  DROP CONSTRAINT IF EXISTS fk_gruenderName;
+  DROP CONSTRAINT  fk_gruenderName;
 ALTER TABLE Gruppe
-  DROP CONSTRAINT IF EXISTS fk_gruppenBild;
+  DROP CONSTRAINT  fk_gruppenBild;
 ALTER TABLE Bewertung
-  DROP CONSTRAINT IF EXISTS fk_bewerterName;
+  DROP CONSTRAINT  fk_bewerterName;
 ALTER TABLE Bewertung
-  DROP CONSTRAINT IF EXISTS fk_bewertungsObjekt;
+  DROP CONSTRAINT  fk_bewertungsObjekt;
 ALTER TABLE Kommentar
-  DROP CONSTRAINT IF EXISTS fk_kommentiererName;
+  DROP CONSTRAINT  fk_kommentiererName;
 ALTER TABLE Kommentar
-  DROP CONSTRAINT IF EXISTS fk_kommentarObjekt;
+  DROP CONSTRAINT  fk_kommentarObjekt;
 ALTER TABLE GruppenMitgliedschaft
-  DROP CONSTRAINT IF EXISTS fk_trollName;
+  DROP CONSTRAINT  fk_trollName;
 ALTER TABLE GruppenMitgliedschaft
-  DROP CONSTRAINT IF EXISTS fk_gruppenId;
+  DROP CONSTRAINT  fk_gruppenId;
 GO
 
 
 -- delete old data first
-TRUNCATE TABLE Troll;
 TRUNCATE TABLE FunObjekt;
 TRUNCATE TABLE Bild;
 TRUNCATE TABLE Video;
@@ -39,6 +40,7 @@ TRUNCATE TABLE Gruppe;
 TRUNCATE TABLE Bewertung;
 TRUNCATE TABLE Kommentar;
 TRUNCATE TABLE GruppenMitgliedschaft;
+TRUNCATE TABLE Troll;
 GO
 
 -- insert all the constraints again
@@ -48,11 +50,11 @@ Alter table Troll
 ALTER TABLE FunObjekt
     ADD CONSTRAINT fk_erstellerName FOREIGN KEY (erstellerName) REFERENCES Troll(benutzerName);
 ALTER TABLE Bild
-    ADD CONSTRAINT fk_funObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+    ADD CONSTRAINT fk_bildFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Video
-    ADD CONSTRAINT fk_funObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+    ADD CONSTRAINT fk_videoFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Witz
-    ADD CONSTRAINT fk_funObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+    ADD CONSTRAINT fk_witzFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Gruppe
     ADD CONSTRAINT fk_gruenderName FOREIGN KEY (gruenderName) REFERENCES Troll(benutzerName);
 ALTER TABLE Gruppe
@@ -75,17 +77,14 @@ ALTER TABLE GruppenMitgliedschaft
 
 
 
-Insert into Troll ( benutzerName, passwortHash, beitrittsDatum, profilBild) values
-  ( 'Troll1' , 'Troll1' , '2010-10-20' , 1 ),
-  ( 'Troll2' , 'Troll2' , '2011-10-20' , 2 ),
-  ( 'Troll3' , 'Troll3' , '2012-01-10' , 3 ),
-  ( 'Troll4' , 'Troll4' , '2013-04-14' , 4 ),
-  ( 'Troll5' , 'Troll5' , '2014-11-25' , 5 ),
-  ( 'Troll6' , 'wtf' , '2014-11-25' ,6  ),
-  ( 'Troll7' , 'wtf' , '2016-03-20' , 7 ),
-  ( 'Troll8' , 'xd' , '2017-09-09' , 1 ),
-  ( 'Troll9' , 'nice' , '2017-10-10' , 1 ),
-  ( 'Troll10' , 'noob' , '2017-12-31' , 4 );
+Insert into Troll ( benutzerName, passwortHash, beitrittsDatum) values
+  ( 'Troll1' , 'Troll1' , '2010-10-20' ),
+  ( 'Troll2' , 'Troll2' , '2011-10-20' ),
+  ( 'Troll3' , 'Troll3' , '2012-01-10' ),
+  ( 'Troll4' , 'Troll4' , '2013-04-14' ),
+  ( 'Troll5' , 'Troll5' , '2014-11-25' ),
+  ( 'Troll6' , 'wtf' , '2014-11-25' ),
+  ( 'Troll7' , 'wtf' , '2016-03-20' );
 
 Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerName) values
   ('Bild1' , '2010-10-20' , 3.5 , 'Troll1' ),
@@ -96,7 +95,6 @@ Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerName
   ('Bild6' , '2014-11-25' , 0 , 'Troll6' ),
   ('Bild7' , '2016-03-20' , 2.45465488 , 'Troll7' ),
   ('Video1' , '2016-03-20' , 4.7 , 'Troll7' ),
-  ('Video2' , '2017-10-10' , 1.5 , 'Troll8' ),
   ('Video1' , '2016-03-20' , 4.7 , 'Troll7' ),
   ('Video1' , '2016-03-20' , 4.7 , 'Troll7' );
 
@@ -134,7 +132,4 @@ Insert into GruppenMitgliedschaft (trollName, gruppenId, beitrittsDatum) values
   ( 'Troll4' , 1 , '2013-04-14' ),
   ( 'Troll5' , 1 , '2014-11-25' ),
   ( 'Troll6' , 1 , '2014-11-25' ),
-  ( 'Troll7' , 1 , '2016-03-20' ),
-  ( 'Troll8' , 1 , '2017-09-09' ),
-  ( 'Troll9' , 1 , '2017-10-10' ),
-  ( 'Troll10' , 1 , '2017-12-31' );
+  ( 'Troll7' , 1 , '2016-03-20' );
