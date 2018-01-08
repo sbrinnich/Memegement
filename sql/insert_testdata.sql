@@ -86,18 +86,18 @@ Insert into Troll ( benutzerName, passwortHash, beitrittsDatum) values
   ( 'Troll6' , 'wtf' , '2014-11-25' ),
   ( 'Troll7' , 'wtf' , '2016-03-20' );
 
-Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerName) values
-  ('Bild1' , '2010-10-20' , 3.5 , 'Troll1' ),
-  ('Bild2' , '2011-10-20' , 2 , 'Troll2' ),
-  ('Bild3' , '2012-01-10' , 3 , 'Troll3' ),
-  ('Bild4' , '2013-04-14' , 1 , 'Troll4' ),
-  ('Bild5' , '2014-11-25' , 5 , 'Troll5' ),
-  ('Bild6' , '2014-11-25' , 0 , 'Troll6' ),
-  ('Bild7' , '2016-03-20' , 2.45465488 , 'Troll7' ),
-  ('Video1' , '2016-03-20' , 4.7 , 'Troll7' ),
-  ('Video2' , '2016-03-20' , 4.7 , 'Troll7' ),
-  ('Witz1' , '2016-03-20' , 4.7 , 'Troll7' ),
-  ('Witz2' , '2013-01-02' , 1.5 , 'Troll1');
+Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerId) values
+  ('Bild1' , '2010-10-20' , 3.5 , 1 ),
+  ('Bild2' , '2011-10-20' , 2 , 2 ),
+  ('Bild3' , '2012-01-10' , 3 , 3 ),
+  ('Bild4' , '2013-04-14' , 1 , 4 ),
+  ('Bild5' , '2014-11-25' , 5 , 5 ),
+  ('Bild6' , '2014-11-25' , 0 , 6 ),
+  ('Bild7' , '2016-03-20' , 2.45465488 , 7 ),
+  ('Video1' , '2016-03-20' , 4.7 , 2 ),
+  ('Video2' , '2016-03-20' , 4.7 , 7 ),
+  ('Witz1' , '2016-03-20' , 4.7 , 7 ),
+  ('Witz2' , '2013-01-02' , 1.5 , 1);
 
 
 Insert into Bild (funObjektId, typ, link) values
@@ -117,8 +117,8 @@ Insert into Witz (funObjektId, text) VALUES
   ( 10 , 'Was sagt ein Hai, nachdem es einen Surfer gefressen hat? - \"Nett serviert, so mit Frühstücksbrettchen\"' ),
   ( 11 , 'Geht eine schwangere Frau in eine Bäckerei und sagt: \"Ich krieg ein Brot.\" - Darauf der Bäcker: "Sachen gibt´s!' );
 
-Insert into Gruppe (name, beschreibung, gruendungsDatum, gruenderName, gruppenBild) values
-  ('Troll Meme Boys' , 'Leute mit Troll Usernamen' , '2010-10-20' , 'Troll1' , 1 );
+Insert into Gruppe (name, beschreibung, gruendungsDatum, gruenderId, gruppenBild) values
+  ('Troll Meme Boys' , 'Leute mit Troll Usernamen' , '2010-10-20' , 1 , 1 );
 
 Insert into Bewertung (bewerterId, bewertungsObjekt, bewertung, bewertungsDatum) values
   ( 1 , 1 , 3 , '2011-10-20' ),
@@ -138,30 +138,119 @@ Insert into GruppenMitgliedschaft (trollId, gruppenId, beitrittsDatum) values
 GO
 
 
---function for trillion entries :D::D:D:D:D:D:D:D:D:D
+--Scripts for trillion entries :D::D:D:D:D:D:D:D:D:D
+
+--Testdata Trolls
 
 DECLARE @Input int;
 SET @Input = 8;
 
 WHILE @Input < 500001
   BEGIN
-    Insert into Troll ( benutzerId, passwortHash, beitrittsDatum) values
-      (@Input, 'passwordforwinners', '2013-01-01');
+    Insert into Troll ( benutzerName , passwortHash, beitrittsDatum) values
+      ('Troll'+cast(@Input AS VARCHAR(10)), 'passwordforwinners', '2013-01-01');
 
     SET @Input = @Input + 1
 
   END
 GO
+
+
+--Testdata Bilder
 
 DECLARE @Input int;
 SET @Input = 12;
 
 WHILE @Input < 100001
   BEGIN
-    Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerName) values
-      ('Bild'+cast(@Input AS VARCHAR(10)) , '2018-01-08' , RAND()*5 , 'Troll'+cast(cast(RAND()*@Input AS INT) AS VARCHAR(10)))
+    Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerId) values
+      ('Bild'+cast(@Input AS VARCHAR(10)) , '2018-01-08' , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1)
     Insert into Bild (funObjektId, typ, link) values
       (@Input , 'jpg' , 'http://www.bento.de/upload/images/imager/upload/images/713693/putinmeme5_2b2260db5b9416a958a6aca40e039b06.jpg')
     SET @Input = @Input + 1
   END
 GO
+
+
+--Testdata Videos
+
+DECLARE @Input int;
+SET @Input = 100001
+
+WHILE @Input < 300001
+  BEGIN
+    INSERT INTO FunObjekt(titel, uploadDatum, durchschnittsBewertung, erstellerId)  VALUES
+      ('Video'+cast(@Input AS VARCHAR(10)) , '2018-12-20' , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1)
+    INSERT INTO Video(funObjektId, dauer, link) VALUES
+      (@Input , '3:33' , 'https://youtu.be/dQw4w9WgXcQ')
+    SET @Input = @Input + 1
+  END
+GO
+
+
+--Testdata Witze
+
+DECLARE @Input int;
+SET @Input = 300001
+
+WHILE @Input < 500001
+  BEGIN
+    INSERT INTO FunObjekt(titel, uploadDatum, durchschnittsBewertung, erstellerId) VALUES
+      ('Witz'+cast(@Input AS VARCHAR(11)) , '2015-11-20' , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1)
+    INSERT INTO Witz(funObjektId, text) VALUES
+      (@Input , 'Ein Zwerg betritt eine Taverne und fragt:"Was ist blau und richt nach roter Farbe?" Der Barkeeper weiß es nicht und der Zwerg schreit: "Blaue Farbe!"')
+    SET @Input = @Input + 1
+  END
+GO
+
+
+--Testdata Kommentare
+
+DECLARE @Input int;
+SET @Input = 1
+
+WHILE @Input < 1000001
+  BEGIN
+    INSERT INTO Kommentar(kommentiererID, kommentarObjekt, erstellungsDatum, text) VALUES
+      (cast(RAND()*500000 AS INT) + 1 , cast(RAND() * 500000 AS INT) + 1 , '2001-01-01' , 'Das ist ja absolut geil!! Weiter so :D')
+    SET @Input = @Input + 1
+  END
+GO
+
+
+--Testdata Gruppen
+
+DECLARE @Input int;
+DECLARE @Gruender int;
+SET @Input = 2
+
+WHILE @Input < 1001
+  BEGIN
+    SET @Gruender = CAST(RAND() * 500000 AS INT) + 1
+    INSERT INTO Gruppe(name, beschreibung, gruendungsDatum, gruenderId, gruppenBild) VALUES
+      ('Gruppe'+cast(@Input AS VARCHAR(9)) , 'Beste Gruppe ever! NEIN WIR SIND DIE BESTEN! NEIN WIR!' , '2014-03-23' , @Gruender , 2)
+    INSERT INTO GruppenMitgliedschaft(trollId, gruppenId, beitrittsDatum) VALUES
+      ( @Gruender , @Input , '2000-01-01' )
+    SET @Input = @Input + 1
+  END
+GO
+
+
+--Testdaten für Gruppenbefüllung
+
+DECLARE @Input int;
+DECLARE @Gruppe int;
+SET @Input = 1
+
+WHILE @Input < 500000
+  BEGIN
+    SET @Gruppe = cast(RAND() * 999 AS INT) + 1
+    IF (NOT EXISTS(SELECT * FROM GruppenMitgliedschaft WHERE gruppenId = @Gruppe AND trollId = @Input))
+      BEGIN
+        INSERT INTO GruppenMitgliedschaft(trollId, gruppenId, beitrittsDatum) VALUES
+          (@Input , @Gruppe , '2014-08-20')
+      END
+    SET @Input = @Input + 1
+  END
+GO
+
