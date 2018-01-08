@@ -1,3 +1,9 @@
+<?php
+
+session_start();
+
+?>
+
 <html>
 <head>
     <title>Memegement - Videos</title>
@@ -40,7 +46,18 @@
                 <li><a href="gruppen.php">Gruppen</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" id="index_login">Login</a></li>
+                <?php
+                if(isset($_SESSION['loginUsername'])){
+                    ?>
+                    <li id="index_login"><?php echo $_SESSION['loginUsername']; ?></li>
+                    <?php
+                }else{
+                    ?>
+                    <li><a href="registrieren.php" id="index_login">Registrieren</a></li>
+                    <li><a href="login.php" id="index_login">Login</a></li>
+                    <?php
+                }
+                ?>
             </ul>
         </div>
     </div>

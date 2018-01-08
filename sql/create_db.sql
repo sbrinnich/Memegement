@@ -31,7 +31,7 @@ GO
 
 Create table Troll (
   id int not null primary key identity (1,1),
-  benutzerName varchar(15) not null UNIQUE, -- vll hier keinen varchar als pk sondern eine ID und den Namen unique machen
+  benutzerName varchar(15) not null UNIQUE,
   passwortHash varchar(256) not null,
   beitrittsDatum date not null,
   profilBild int
@@ -42,7 +42,7 @@ Create table FunObjekt (
   titel varchar(50) not null,
   uploadDatum date not null,
   durchschnittsBewertung float,
-  erstellerName varchar(15) not null
+  erstellerId int not null
 );
 
 Create table Bild (
@@ -67,31 +67,31 @@ Create table Gruppe (
   name varchar(20) not null,
   beschreibung varchar(1024),
   gruendungsDatum date not null,
-  gruenderName varchar(15) not null,
+  gruenderId int not null,
   gruppenBild int not null
 );
 
 Create table Bewertung (
-  bewerterName varchar(15) not null,
+  bewerterId int not null,
   bewertungsObjekt int not null,
   bewertung float not null,
   bewertungsDatum date not null,
-  primary key (bewerterName, bewertungsObjekt)
+  primary key (bewerterId, bewertungsObjekt)
 );
 
 Create table Kommentar (
-  kommentiererName varchar(15) not null,
+  kommentiererID int not null,
   kommentarObjekt int not null,
   erstellungsDatum date not null,
   text varchar(256) not null,
-  primary key (kommentiererName, kommentarObjekt, erstellungsDatum)
+  primary key (kommentiererID, kommentarObjekt, erstellungsDatum)
 );
 
 Create table GruppenMitgliedschaft (
-  trollName varchar(15) not null,
+  trollId int not null,
   gruppenId int not null,
   beitrittsDatum date not null,
-  primary key (trollName, gruppenId)
+  primary key (trollId, gruppenId)
 );
 
 GO
@@ -101,26 +101,26 @@ GO
 Alter table Troll
   add constraint fk_trollProfilbild foreign key (profilBild) references Bild(funObjektId);
 ALTER TABLE FunObjekt
-  ADD CONSTRAINT fk_erstellerName FOREIGN KEY (erstellerName) REFERENCES Troll(benutzerName);
+  ADD CONSTRAINT fk_erstellerId FOREIGN KEY (erstellerId) REFERENCES Troll(id);
 ALTER TABLE Bild
-  ADD CONSTRAINT fk_bildFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+  ADD CONSTRAINT fk_bildFunObjektId FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Video
-  ADD CONSTRAINT fk_videoFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+  ADD CONSTRAINT fk_videoFunObjektId FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Witz
-  ADD CONSTRAINT fk_witzFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+  ADD CONSTRAINT fk_witzFunObjektId FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Gruppe
-  ADD CONSTRAINT fk_gruenderName FOREIGN KEY (gruenderName) REFERENCES Troll(benutzerName);
+  ADD CONSTRAINT fk_gruenderId FOREIGN KEY (gruenderId) REFERENCES Troll(id);
 ALTER TABLE Gruppe
   ADD CONSTRAINT fk_gruppenBild FOREIGN KEY (gruppenBild) REFERENCES Bild(funObjektId);
 ALTER TABLE Bewertung
-  ADD CONSTRAINT fk_bewerterName FOREIGN KEY (bewerterName) REFERENCES Troll(benutzerName);
+  ADD CONSTRAINT fk_bewerterId FOREIGN KEY (bewerterId) REFERENCES Troll(id);
 ALTER TABLE Bewertung
   ADD CONSTRAINT fk_bewertungsObjekt FOREIGN KEY (bewertungsObjekt) REFERENCES FunObjekt(id);
 ALTER TABLE Kommentar
-  ADD CONSTRAINT fk_kommentiererName FOREIGN KEY (kommentiererName) REFERENCES Troll(benutzerName);
+  ADD CONSTRAINT fk_kommentiererId FOREIGN KEY (kommentiererId) REFERENCES Troll(id);
 ALTER TABLE Kommentar
   ADD CONSTRAINT fk_kommentarObjekt FOREIGN KEY (kommentarObjekt) REFERENCES FunObjekt(id);
 ALTER TABLE GruppenMitgliedschaft
-  ADD CONSTRAINT fk_trollName FOREIGN KEY (trollName) REFERENCES Troll(benutzerName);
+  ADD CONSTRAINT fk_trollId FOREIGN KEY (trollId) REFERENCES Troll(id);
 ALTER TABLE GruppenMitgliedschaft
   ADD CONSTRAINT fk_gruppenId FOREIGN KEY (gruppenId) REFERENCES Gruppe(id);
