@@ -95,8 +95,10 @@ Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerName
   ('Bild6' , '2014-11-25' , 0 , 'Troll6' ),
   ('Bild7' , '2016-03-20' , 2.45465488 , 'Troll7' ),
   ('Video1' , '2016-03-20' , 4.7 , 'Troll7' ),
-  ('Video1' , '2016-03-20' , 4.7 , 'Troll7' ),
-  ('Video1' , '2016-03-20' , 4.7 , 'Troll7' );
+  ('Video2' , '2016-03-20' , 4.7 , 'Troll7' ),
+  ('Witz1' , '2016-03-20' , 4.7 , 'Troll7' ),
+  ('Witz2' , '2013-01-02' , 1.5 , 'Troll1');
+
 
 Insert into Bild (funObjektId, typ, link) values
   ( 1 , 'png' , 'https://vignette.wikia.nocookie.net/towerkeepers/images/1/13/Armored_troll1.png/revision/latest?cb=20170729004422' ),
@@ -108,12 +110,12 @@ Insert into Bild (funObjektId, typ, link) values
   ( 7 , 'png' , 'https://www.thezorklibrary.com/history/image/troll7.png' );
 
 Insert into Video (funObjektId, dauer, link) values
-  ( 1, '00:02:10:40', 'https://www.sonelink.com/troll.video'),
-  ( 2 , '11:59:59:999', 'https://www.sonelink.com/superlong.video');
+  ( 8, '00:02:10:40', 'https://www.sonelink.com/troll.video'),
+  ( 9 , '11:59:59:999', 'https://www.sonelink.com/superlong.video');
 
 Insert into Witz (funObjektId, text) VALUES
-  ( 1 , 'Was sagt ein Hai, nachdem es einen Surfer gefressen hat? - \"Nett serviert, so mit Frühstücksbrettchen\"' ),
-  ( 2 , 'Geht eine schwangere Frau in eine Bäckerei und sagt: \"Ich krieg ein Brot.\" - Darauf der Bäcker: "Sachen gibt´s!' );
+  ( 10 , 'Was sagt ein Hai, nachdem es einen Surfer gefressen hat? - \"Nett serviert, so mit Frühstücksbrettchen\"' ),
+  ( 11 , 'Geht eine schwangere Frau in eine Bäckerei und sagt: \"Ich krieg ein Brot.\" - Darauf der Bäcker: "Sachen gibt´s!' );
 
 Insert into Gruppe (name, beschreibung, gruendungsDatum, gruenderName, gruppenBild) values
   ('Troll Meme Boys' , 'Leute mit Troll Usernamen' , '2010-10-20' , 'Troll1' , 1 );
@@ -133,3 +135,33 @@ Insert into GruppenMitgliedschaft (trollName, gruppenId, beitrittsDatum) values
   ( 'Troll5' , 1 , '2014-11-25' ),
   ( 'Troll6' , 1 , '2014-11-25' ),
   ( 'Troll7' , 1 , '2016-03-20' );
+GO
+
+
+--function for trillion entries :D::D:D:D:D:D:D:D:D:D
+
+DECLARE @Input int;
+SET @Input = 8;
+
+WHILE @Input < 500001
+  BEGIN
+    Insert into Troll ( benutzerName, passwortHash, beitrittsDatum) values
+      ('Troll'+cast(@Input AS VARCHAR(10)), 'passwordforwinners', '2013-01-01');
+
+    SET @Input = @Input + 1
+
+  END
+GO
+
+DECLARE @Input int;
+SET @Input = 12;
+
+WHILE @Input < 100001
+  BEGIN
+    Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerName) values
+      ('Bild'+cast(@Input AS VARCHAR(10)) , '2018-01-08' , RAND()*5 , 'Troll'+cast(cast(RAND()*@Input AS INT) AS VARCHAR(10)))
+    Insert into Bild (funObjektId, typ, link) values
+      (@Input , 'jpg' , 'http://www.bento.de/upload/images/imager/upload/images/713693/putinmeme5_2b2260db5b9416a958a6aca40e039b06.jpg')
+    SET @Input = @Input + 1
+  END
+GO
