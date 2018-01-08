@@ -1,5 +1,6 @@
 -- Create Database
-USE Master;
+USE Fahrrad;
+GO
 
 IF EXISTS(SELECT * FROM sysdatabases WHERE name = 'Memegement')
   Drop database Memegement
@@ -29,48 +30,49 @@ GO
 -- Create Tables
 
 Create table Troll (
-  benutzerName varchar not null primary key, -- vll hier keinen varchar als pk sondern eine ID und den Namen unique machen
-  passwortHash varchar not null,
+  id int not null primary key identity (1,1),
+  benutzerName varchar(15) not null, -- vll hier keinen varchar als pk sondern eine ID und den Namen unique machen
+  passwortHash varchar(256) not null,
   beitrittsDatum date not null,
   profilBild int
 );
 
 Create table FunObjekt (
   id int not null primary key identity(1,1),
-  titel varchar not null,
+  titel varchar(50) not null,
   uploadDatum date not null,
   durchschnittsBewertung float,
-  erstellerName varchar not null foreign key references Troll(benutzername)
+  erstellerName varchar(15) not null foreign key references Troll(benutzername)
 );
 
 Create table Bild (
   funObjektId int not null primary key foreign key references FunObjekt(id),
-  typ varchar not null,
-  link varchar not null
+  typ varchar(10) not null,
+  link varchar(256) not null
 );
 
 Create table Video (
   funObjektId int not null primary key foreign key references FunObjekt(id),
   dauer time not null,
-  link varchar not null
+  link varchar(256) not null
 );
 
 Create table Witz (
   funObjektId int not null primary key foreign key references FunObjekt(id),
-  text varchar not null
+  text varchar(1024) not null
 );
 
 Create table Gruppe (
   id int not null primary key identity(1,1),
-  name varchar not null,
-  beschreibung varchar,
+  name varchar(20) not null,
+  beschreibung varchar(1024),
   gruendungsDatum date not null,
-  gruenderName varchar not null foreign key references Troll(benutzername),
+  gruenderName varchar(15) not null foreign key references Troll(benutzername),
   gruppenBild int not null foreign key references Bild(funObjektId)
 );
 
 Create table Bewertung (
-  bewerterName varchar not null foreign key references Troll(benutzername),
+  bewerterName varchar(15) not null foreign key references Troll(benutzername),
   bewertungsObjekt int not null foreign key references FunObjekt(id),
   bewertung float not null,
   bewertungsDatum date not null,
@@ -78,15 +80,15 @@ Create table Bewertung (
 );
 
 Create table Kommentar (
-  kommentiererName varchar not null foreign key references Troll(benutzername),
+  kommentiererName varchar(15) not null foreign key references Troll(benutzername),
   kommentarObjekt int not null foreign key references FunObjekt(id),
   erstellungsDatum date not null,
-  text varchar not null,
+  text varchar(256) not null,
   primary key (kommentiererName, kommentarObjekt, erstellungsDatum)
 );
 
 Create table GruppenMitgliedschaft (
-  trollName varchar not null foreign key references Troll(benutzername),
+  trollName varchar(15) not null foreign key references Troll(benutzername),
   gruppenId int not null foreign key references Gruppe(id),
   beitrittsDatum date not null,
   primary key (trollName, gruppenId)
@@ -96,5 +98,29 @@ GO
 
 -- Add missing foreign key constraints
 
-Alter table Troll add constraint fkTrollProfilbild foreign key (profilBild) references Bild(funObjektId);
-GO
+Alter table Troll
+  add constraint fk_trollProfilbild foreign key (profilBild) references Bild(funObjektId);
+ALTER TABLE FunObjekt
+  ADD CONSTRAINT fk_erstellerName FOREIGN KEY (erstellerName) REFERENCES Troll(benutzerName);
+ALTER TABLE Bild
+  ADD CONSTRAINT fk_funObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+ALTER TABLE Video
+  ADD CONSTRAINT fk_funObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+ALTER TABLE Witz
+  ADD CONSTRAINT fk_funObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+ALTER TABLE Gruppe
+  ADD CONSTRAINT fk_gruenderName FOREIGN KEY (gruenderName) REFERENCES Troll(benutzerName);
+ALTER TABLE Gruppe
+  ADD CONSTRAINT fk_gruppenBild FOREIGN KEY (gruppenBild) REFERENCES Bild(funObjektId);
+ALTER TABLE Bewertung
+  ADD CONSTRAINT fk_bewerterName FOREIGN KEY (bewerterName) REFERENCES Troll(benutzerName);
+ALTER TABLE Bewertung
+  ADD CONSTRAINT fk_bewertungsObjekt FOREIGN KEY (bewertungsObjekt) REFERENCES FunObjekt(id);
+ALTER TABLE Kommentar
+  ADD CONSTRAINT fk_kommentiererName FOREIGN KEY (kommentiererName) REFERENCES Troll(benutzerName);
+ALTER TABLE Kommentar
+  ADD CONSTRAINT fk_kommentarObjekt FOREIGN KEY (kommentarObjekt) REFERENCES FunObjekt(id);
+ALTER TABLE GruppenMitgliedschaft
+  ADD CONSTRAINT fk_trollName FOREIGN KEY (trollName) REFERENCES Troll(benutzerName);
+ALTER TABLE GruppenMitgliedschaft
+  ADD CONSTRAINT fk_gruppenId FOREIGN KEY (gruppenId) REFERENCES Gruppe(id);
