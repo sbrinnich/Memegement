@@ -103,11 +103,11 @@ Alter table Troll
 ALTER TABLE FunObjekt
   ADD CONSTRAINT fk_erstellerId FOREIGN KEY (erstellerId) REFERENCES Troll(id);
 ALTER TABLE Bild
-  ADD CONSTRAINT fk_bildFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+  ADD CONSTRAINT fk_bildFunObjektId FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Video
-  ADD CONSTRAINT fk_videoFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+  ADD CONSTRAINT fk_videoFunObjektId FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Witz
-  ADD CONSTRAINT fk_witzFunObjektID FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
+  ADD CONSTRAINT fk_witzFunObjektId FOREIGN KEY (funObjektId) REFERENCES FunObjekt(id);
 ALTER TABLE Gruppe
   ADD CONSTRAINT fk_gruenderId FOREIGN KEY (gruenderId) REFERENCES Troll(id);
 ALTER TABLE Gruppe

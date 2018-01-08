@@ -75,7 +75,7 @@ AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.GruppenMitgliedschaft(trollName,gruppenId,beitrittsDatum) values
+INSERT INTO dbo.GruppenMitgliedschaft(trollId,gruppenId,beitrittsDatum) values
   (@trollId,@gruppenId,GETDATE())
 COMMIT TRANSACTION
 END TRY
@@ -94,8 +94,8 @@ AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.FunObjekt(id,titel,uploadDatum,durchschnittsBewertung,erstellerName) values
- (Default,@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
+INSERT INTO dbo.FunObjekt(titel,uploadDatum,durchschnittsBewertung,erstellerName) values
+  (@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
 INSERT INTO dbo.Video(funObjektId,dauer,link) VALUES
   (@id,@dauer,@link);
 COMMIT TRANSACTION
@@ -149,14 +149,15 @@ END CATCH
 
 
 CREATE PROCEDURE [dbo].[usp_FunObjektBewerten]
-    @trollName varchar(1),
+    @trollId int,
     @gruppenId varchar(1)
 AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.GruppenMitgliedschaft(trollName,gruppenId,beitrittsDatum) values
-  (@trollName,@gruppenId,GETDATE())
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+INSERT INTO dbo.GruppenMitgliedschaft(trollId,gruppenId,beitrittsDatum) values
+  (@trollId,@gruppenId,GETDATE())
 COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
