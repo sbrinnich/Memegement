@@ -17,25 +17,25 @@ BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_gruppeAnlegen]
-  @id int,
   @name varchar(20),
   @beschreibung  varchar(1024),
-  @gruenderName varchar(15),
-  @gruppenBild int
+  @gruenderId int
 AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.Gruppe(id,name,beschreibung,gruendungsDatum,gruenderName,gruppenBild) values
-  ( @id,@name,@beschreibung, GETDATE(),@gruenderName,@gruppenBild)
+INSERT INTO dbo.Gruppe(name,beschreibung,gruendungsDatum,gruenderId) values
+  ( @name,@beschreibung, GETDATE(),@gruenderId)
 COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_gruppenBildÄndern]
     @id int,
@@ -52,21 +52,24 @@ BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
+
 CREATE PROCEDURE [dbo].[usp_benutzerBildÄndern]
-    @benutzerName varchar(15),
+    @benutzerId int,
     @profilBild int
 AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 Update dbo.Troll SET profilBild = @profilBild
-WHERE benutzerName = @benutzerName;
+WHERE id = @benutzerId;
 COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_gruppeBeitreten]
     @trollId int,
@@ -83,19 +86,21 @@ BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenVideo]
-    @title varchar(50),
-    @durchschnittsBewertung float,
-    @erstellerName varchar(1),
+    @titel varchar(50),
+    @erstellerId int,
     @dauer time(7),
-    @link varchar(1)
+    @link varchar(256)
 AS
 BEGIN TRY
 BEGIN TRANSACTION
+DECLARE @id int;
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.FunObjekt(titel,uploadDatum,durchschnittsBewertung,erstellerName) values
-  (@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
+INSERT INTO dbo.FunObjekt(titel,uploadDatum,erstellerId) values
+  (@titel,GETDATE(),@erstellerId);
+SET @id = SCOPE_IDENTITY();
 INSERT INTO dbo.Video(funObjektId,dauer,link) VALUES
   (@id,@dauer,@link);
 COMMIT TRANSACTION
@@ -104,20 +109,21 @@ BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenBild]
-    @id varchar(1),
-    @title varchar(1),
-    @durchschnittsBewertung float,
-    @erstellerName varchar(1),
-    @typ varchar(1),
-    @link varchar(1)
+    @titel varchar(50),
+    @erstellerId int,
+    @typ varchar(10),
+    @link varchar(256)
 AS
 BEGIN TRY
 BEGIN TRANSACTION
+DECLARE @id int;
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.FunObjekt(id,titel,uploadDatum,durchschnittsBewertung,erstellerName) values
-  (@id,@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
+INSERT INTO dbo.FunObjekt(titel,uploadDatum,erstellerId) values
+  (@titel,GETDATE(),@erstellerId);
+SET @id = SCOPE_IDENTITY();
 INSERT INTO dbo.Bild(funObjektId,typ,link) VALUES
   (@id,@typ,@link);
 COMMIT TRANSACTION
@@ -126,19 +132,20 @@ BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenWitz]
-    @id varchar(1),
-    @title varchar(1),
-    @durchschnittsBewertung float,
-    @erstellerName varchar(1),
-    @text varchar(1)
+    @title varchar(50),
+    @erstellerId int,
+    @text varchar(1024)
 AS
 BEGIN TRY
 BEGIN TRANSACTION
+DECLARE @id int;
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.FunObjekt(id,titel,uploadDatum,durchschnittsBewertung,erstellerName) values
-  (@id,@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
+INSERT INTO dbo.FunObjekt(titel,uploadDatum,erstellerId) values
+  (@title,GETDATE(),@erstellerId);
+SET @id = SCOPE_IDENTITY();
 INSERT INTO dbo.Witz(funObjektId,text) VALUES
   (@id,@text);
 COMMIT TRANSACTION
@@ -147,19 +154,40 @@ BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
 
+GO
 
 CREATE PROCEDURE [dbo].[usp_FunObjektBewerten]
-    @trollId int,
-    @gruppenId varchar(1)
+    @bewerterId int,
+    @bewertungsObjekt int,
+    @bewertung float
 AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.GruppenMitgliedschaft(trollId,gruppenId,beitrittsDatum) values
-  (@trollId,@gruppenId,GETDATE())
+INSERT INTO dbo.Bewertung(bewerterId,bewertungsObjekt,bewertung,bewertungsDatum) values
+  (@bewerterId,@bewertungsObjekt,@bewertung,GETDATE())
 COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 END CATCH
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_FunObjektKommentieren]
+    @kommentiererId int,
+    @kommentarObjekt int,
+    @text varchar(256)
+AS
+BEGIN TRY
+BEGIN TRANSACTION
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+INSERT INTO dbo.Kommentar(kommentiererId,kommentarObjekt,erstellungsDatum,text) values
+  (@kommentiererId,@kommentarObjekt,GETDATE(),@text)
+COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+END CATCH
+
+GO

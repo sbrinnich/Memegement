@@ -1,5 +1,5 @@
 -- Create Database
-USE Fahrrad;
+USE master;
 GO
 
 IF EXISTS(SELECT * FROM sysdatabases WHERE name = 'Memegement')
@@ -64,7 +64,7 @@ Create table Witz (
 
 Create table Gruppe (
   id int not null primary key identity(1,1),
-  name varchar(20) not null,
+  name varchar(20) not null UNiQUE,
   beschreibung varchar(1024),
   gruendungsDatum date not null,
   gruenderId int not null,
@@ -124,3 +124,5 @@ ALTER TABLE GruppenMitgliedschaft
   ADD CONSTRAINT fk_trollId FOREIGN KEY (trollId) REFERENCES Troll(id);
 ALTER TABLE GruppenMitgliedschaft
   ADD CONSTRAINT fk_gruppenId FOREIGN KEY (gruppenId) REFERENCES Gruppe(id);
+
+GO
