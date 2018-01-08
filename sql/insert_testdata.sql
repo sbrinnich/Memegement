@@ -212,7 +212,7 @@ SET @Input = 1
 WHILE @Input < 1000001
   BEGIN
     INSERT INTO Kommentar(kommentiererID, kommentarObjekt, erstellungsDatum, text) VALUES
-      (cast(RAND()*500000 AS INT) + 1 , cast(RAND() * 500000 AS INT) + 1 , '2001-01-01' , 'Das ist ja absolut geil!! Weiter so :D')
+      (cast(RAND()*500000 AS INT) + 1 , cast(RAND() * 500000 AS INT) + 1 , concat( cast((RAND() * 10 + 2007) AS VARCHAR(2), '-0', cast((RAND() * 9 + 1) AS VARCHAR(1)) , '-0', cast((RAND() * 9 + 1) AS VARCHAR(1)) )) , 'Das ist ja absolut geil!! Weiter so :D')
     SET @Input = @Input + 1
   END
 GO
