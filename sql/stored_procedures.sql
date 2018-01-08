@@ -2,8 +2,8 @@ USE Memegement
 GO
 
 CREATE PROCEDURE [dbo].[usp_benutzerAnlegen]
-  @benutzerName varchar(1),
-  @passwortHash  varchar(1),
+  @benutzerName varchar(15),
+  @passwortHash  varchar(256),
   @profilBild int
 AS
 BEGIN TRY
@@ -20,9 +20,9 @@ END CATCH
 
 CREATE PROCEDURE [dbo].[usp_gruppeAnlegen]
   @id int,
-  @name varchar(1),
-  @beschreibung  varchar(1),
-  @gruenderName varchar(1),
+  @name varchar(20),
+  @beschreibung  varchar(1024),
+  @gruenderName varchar(15),
   @gruppenBild int
 AS
 BEGIN TRY
@@ -53,7 +53,7 @@ ROLLBACK TRANSACTION
 END CATCH
 
 CREATE PROCEDURE [dbo].[usp_benutzerBildÄndern]
-    @benutzerName varchar(1),
+    @benutzerName varchar(15),
     @profilBild int
 AS
 BEGIN TRY
@@ -69,14 +69,14 @@ END CATCH
 
 
 CREATE PROCEDURE [dbo].[usp_gruppeBeitreten]
-    @trollName varchar(1),
-    @gruppenId varchar(1)
+    @trollId int,
+    @gruppenId int
 AS
 BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 INSERT INTO dbo.GruppenMitgliedschaft(trollName,gruppenId,beitrittsDatum) values
-  (@trollName,@gruppenId,GETDATE())
+  (@trollId,@gruppenId,GETDATE())
 COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
@@ -85,8 +85,7 @@ END CATCH
 
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenVideo]
-    @id varchar(1),
-    @title varchar(1),
+    @title varchar(50),
     @durchschnittsBewertung float,
     @erstellerName varchar(1),
     @dauer time(7),
@@ -96,7 +95,7 @@ BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 INSERT INTO dbo.FunObjekt(id,titel,uploadDatum,durchschnittsBewertung,erstellerName) values
- (@id,@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
+ (Default,@title,GETDATE(),@durchschnittsBewertung,@erstellerName);
 INSERT INTO dbo.Video(funObjektId,dauer,link) VALUES
   (@id,@dauer,@link);
 COMMIT TRANSACTION
