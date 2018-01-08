@@ -10,6 +10,8 @@ if(isset($_GET['seite'])){
     $_SESSION['currentPage'] = $_GET['seite'];
 }
 
+include_once "conf.php";
+
 ?>
 
 <html>
@@ -82,6 +84,7 @@ if(isset($_GET['seite'])){
         case 'gruppen': include_once "gruppen.php";break;
         case 'login': include_once "login.php";break;
         case 'registrieren': include_once "registrieren.php";break;
+        case 'gruppeErstellen': include_once "gruppeErstellen.php";break;
         default: include_once "home.php";break;
     }
 

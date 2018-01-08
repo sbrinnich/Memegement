@@ -9,6 +9,20 @@ if(!isset($_SESSION['loginUsername'])){
 // Prüfen ob alles eingegeben wurde
 if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
     //TODO: gruppe erstellen
+    $connectionInfo = array( "UID"=>$DB_USERNAME,
+        "PWD"=>$DB_PASSWORD,
+        "Database"=>$DB_NAME);
+
+    /*
+    $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
+
+    $procedure_params = array(
+        array($_POST['gruppenname'], SQLSRV_PARAM_OUT),
+        array($_POST['beschreibung'], SQLSRV_PARAM_OUT),
+        array($_SESSION['loginUsername'], SQLSRV_PARAM_OUT)
+    );
+    $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderName = ?";
+    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);*/
 }
 
 ?>
@@ -16,7 +30,7 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-4">
-        <div class="row" id="register_headline">Registrieren</div>
+        <div class="row" id="gruppeErstellen_headline">Neue Gruppe erstellen</div>
         <?php
         if(isset($_SESSION['status']) && $_SESSION['status'] != ''){
             ?>
@@ -26,11 +40,10 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
         $_SESSION['status'] = '';
         ?>
 
-        <form id="form_register" method="post" action="/registrieren.php">
-            <input type="text" class="form-control" name="username" placeholder="Username" /><br />
-            <input type="password" class="form-control" name="passwort" placeholder="Passwort" /><br />
-            <input type="password" class="form-control" name="passwort_repeat" placeholder="Passwort Wiederholen" /><br />
-            <button type="submit" class="btn btn-primary" id="register_button">Registrieren</button>
+        <form class="form" method="post" action="?seite=gruppeErstellen">
+            <input type="text" class="form-control" name="gruppenname" placeholder="Gruppenname" /><br />
+            <textarea class="form-control" name="beschreibung" placeholder="Beschreibung"></textarea><br />
+            <button type="submit" class="btn btn-primary" class="form_button">Erstellen</button>
         </form>
     </div>
 </div>

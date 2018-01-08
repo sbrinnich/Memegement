@@ -2,7 +2,7 @@
 
 // Redirect zu index wenn bereits eingeloggt
 if(isset($_SESSION['loginUsername'])){
-    header('Location: home.php', true, 301);
+    header('Location: index.php?seite=home', true, 301);
     exit();
 }
 
@@ -13,8 +13,6 @@ if(isset($_POST['username']) && isset($_POST['passwort'])){
     $loginSuccess = true;
     if($loginSuccess){
         $_SESSION['loginUsername'] = $_POST['username'];
-        header('Location: home.php', true, 301);
-        exit();
     }else{
         $_SESSION['status'] = 'Login fehlgeschlagen! Bitte prüfe deine Eingaben und versuche es erneut!';
     }
@@ -34,7 +32,7 @@ if(isset($_POST['username']) && isset($_POST['passwort'])){
         $_SESSION['status'] = '';
         ?>
 
-        <form id="form_login" method="post" action="/login.php">
+        <form id="form_login" method="post" action="?seite=login">
             <input type="text" class="form-control" name="username" placeholder="Username" /><br />
             <input type="password" class="form-control" name="passwort" placeholder="Passwort" /><br />
             <button type="submit" class="btn btn-primary" id="login_button">Login</button>

@@ -116,17 +116,17 @@ body {
 }
 
 /* LOGIN & REGISTRIEREN */
-#login_headline, #register_headline {
+#login_headline, #register_headline, #gruppeErstellen_headline {
     font-size: 40px;
     text-align: center;
     padding-bottom: 20px;
 }
 
-#form_login, #form_register {
+#form_login, #form_register, .form {
     text-align: right;
 }
 
-#login_button, #register_button {
+#login_button, #register_button, .form_button {
     padding-top: 10px;
     font-size: 20px;
 }
