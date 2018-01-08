@@ -114,3 +114,19 @@ body {
 .kommentar {
     margin-top: 20px;
 }
+
+/* LOGIN & REGISTRIEREN */
+#login_headline, #register_headline {
+    font-size: 40px;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#form_login, #form_register {
+    text-align: right;
+}
+
+#login_button, #register_button {
+    padding-top: 10px;
+    font-size: 20px;
+}
