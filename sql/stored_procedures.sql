@@ -518,7 +518,7 @@ CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
     @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
     @link                   VARCHAR(256) OUTPUT,
-    @datum                  DATE OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -627,27 +627,124 @@ AS
 GO
 
 
--- ein Funobjekt zurückgeben, dass einen Typen hat, der Anzeigt was es is, -> Objekt, titel, ersteller, hochlade datum, durchschnittsbewertung
+CREATE PROCEDURE [dbo].[usp_bildInfosAnzeigen]
+    @id INT,
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link VARCHAR(256) OUTPUT
+  AS
+  SELECT
+    @titel = F.titel,
+    @erstellerName = T.benutzerName,
+    @uploadDatum = F.uploadDatum,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @link = B.link
+  FROM (SELECT * FROM Bild WHERE funObjektId = @id) B
+    JOIN FunObjekt F ON B.funObjektId = F.id JOIN Troll T ON F.erstellerId = T.id
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_videoInfosAnzeigen]
+    @id INT,
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link VARCHAR(256) OUTPUT
+AS
+  SELECT
+    @titel = F.titel,
+    @erstellerName = T.benutzerName,
+    @uploadDatum = F.uploadDatum,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @link = V.link
+  FROM (SELECT * FROM Video WHERE funObjektId = @id) V
+    JOIN FunObjekt F ON V.funObjektId = F.id JOIN Troll T ON F.erstellerId = T.id
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_witzInfosAnzeigen]
+    @id INT,
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @text VARCHAR(1024) OUTPUT
+AS
+  SELECT
+    @titel = F.titel,
+    @erstellerName = T.benutzerName,
+    @uploadDatum = F.uploadDatum,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @text = W.text
+  FROM (SELECT * FROM Witz WHERE funObjektId = @id) W
+    JOIN FunObjekt F ON W.funObjektId = F.id JOIN Troll T ON F.erstellerId = T.id
+
+GO
+
+
+-- Das angeforderte Funobjekt mit Typen, Titel, Erstellernamen, uploadDatum, durchschnittsbewertung
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnzeigen]
     @id INT,
-    @typ VARCHAR(1) OUTPUT,
-    @name VARCHAR(20) OUTPUT,
-    @beschreibung VARCHAR(1024) OUTPUT,
-    @gruendungsDatum DATE OUTPUT,
-    @gruenderName VARCHAR(15) OUTPUT,
-    @mitgliederAnzahl INT OUTPUT,
-    @gruppenBildLink VARCHAR(256) OUTPUT
+    @typ VARCHAR(1) OUTPUT, -- gibt an ob Bild (B), Video (V), oder Witz (W)
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link VARCHAR(256) OUTPUT,
+    @text VARCHAR(1024) OUTPUT
 AS
-  SELECT
-    @name = G.name,
-    @beschreibung = G.beschreibung,
-    @gruendungsDatum = G.gruendungsDatum,
-    @gruenderName = T.benutzerName,
-    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft group by gruppenId),
-    @gruppenBildLink = B.link
-  FROM (Select * FROM Gruppe WHERE id = @id) G JOIN Troll T
-      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId;
+  DECLARE @count INT = 0;
+
+  SELECT @count = COUNT(*) FROM Bild WHERE funObjektId = @id;
+  IF(@count = 1)
+      BEGIN
+        EXEC usp_bildInfosAnzeigen @id, @titel OUTPUT ,
+                                   @erstellerName OUTPUT,
+                                   @uploadDatum OUTPUT,
+                                   @durchschnittsBewertung OUTPUT,
+                                   @link OUTPUT ;
+        SET @text = 'Dies ist ein Bild';
+        SET @typ = 'B';
+        RETURN
+      END
+  ELSE
+  BEGIN
+    SELECT @count = COUNT(*) FROM Video WHERE funObjektId = @id;
+    IF (@count = 1)
+      BEGIN
+        EXEC usp_videoInfosAnzeigen @id, @titel OUTPUT ,
+                                   @erstellerName OUTPUT,
+                                   @uploadDatum OUTPUT,
+                                   @durchschnittsBewertung OUTPUT,
+                                   @link OUTPUT ;
+        SET @text = 'Dies ist ein Video';
+        SET @typ = 'V';
+        RETURN
+      END
+    ELSE
+      BEGIN
+        SELECT @count = COUNT(*) FROM Witz WHERE funObjektId = @id;
+        IF (@count = 1)
+          BEGIN
+            EXEC usp_witzInfosAnzeigen @id, @titel OUTPUT ,
+                                       @erstellerName OUTPUT,
+                                       @uploadDatum OUTPUT,
+                                       @durchschnittsBewertung OUTPUT,
+                                       @text OUTPUT ;
+            SET @link = NULL;
+            SET @typ = 'W';
+          END
+        ELSE -- nothing :(
+          BEGIN
+            RETURN
+          END
+      END
+  END
+
 
 GO
 
