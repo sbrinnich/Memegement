@@ -8,36 +8,45 @@ if(!isset($_SESSION['loginUsername'])){
 
 // Prüfen ob alles eingegeben wurde
 if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
-    //TODO: gruppe erstellen
     $connectionInfo = array( "UID"=>$DB_USERNAME,
         "PWD"=>$DB_PASSWORD,
         "Database"=>$DB_NAME);
 
     $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
+    $benutzerId = 0;
     $procedure_params = array(
-        array($_SESSION['loginUsername'], SQLSRV_PARAM_OUT)
+        array($_SESSION['loginUsername'], SQLSRV_PARAM_IN),
+        array(&$benutzerId, SQLSRV_PARAM_INOUT)
     );
-    $sql = "EXEC usp_benutzerIdSuchen @benutzerName = ?";
+    $sql = "EXEC usp_benutzerIdSuchen @benutzerName = ?, @id = ?";
     $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
     if(sqlsrv_execute($stmt)){
-        while()
+        sqlsrv_next_result($stmt);
 
         $procedure_params = array(
-            array($_POST['gruppenname'], SQLSRV_PARAM_OUT),
-            array($_POST['beschreibung'], SQLSRV_PARAM_OUT),
-            array($benutzerId, SQLSRV_PARAM_OUT)
+            array($_POST['gruppenname'], SQLSRV_PARAM_IN),
+            array($_POST['beschreibung'], SQLSRV_PARAM_IN),
+            array($benutzerId, SQLSRV_PARAM_IN)
         );
+
+        sqlsrv_free_stmt($stmt);
 
         $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderId = ?";
         $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
-        $exec = sqlsrv_execute($stmt);
-
-        sqlsrv_free_stmt($stmt);
-        sqlsrv_close($conn);
+        if(sqlsrv_execute($stmt)) {
+            sqlsrv_next_result($stmt);
+            sqlsrv_free_stmt($stmt);
+            $_SESSION['status'] = 'Gruppe wurde erfolgreich erstellt!';
+        }else{
+            $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Gruppe konnte nicht erstellt werden!';
+        }
+    }else{
+        $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Gruppe konnte nicht erstellt werden!';
     }
+    sqlsrv_close($conn);
 }
 
 ?>
