@@ -301,7 +301,7 @@ GO
 
 
 --Gibt Benutzername, Beitrittsdatum, Profilbild-Link für einen bestimmten User zurück
-CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
+Alter PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
       @id INT,
       @benutzerName VARCHAR(15) OUTPUT,
       @beitrittsDatum DATE  OUTPUT,
