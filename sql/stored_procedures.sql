@@ -191,3 +191,19 @@ ROLLBACK TRANSACTION
 END CATCH
 
 GO
+
+CREATE PROCEDURE [dbo].[usp_FunObjektKommentiereLaden]
+@id int
+AS
+BEGIN TRY
+  BEGIN TRANSACTION
+   SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+    SELECT text, erstellungsDatum FROM Kommentar WHERE kommentarObjekt = @id
+    ORDER by cast(erstellungsDatum as datetime) asc;
+  COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+END CATCH
+
+GO
