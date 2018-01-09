@@ -6,4 +6,10 @@ if(!isset($_SESSION['loginUsername'])){
     exit();
 }
 
+$actualGroupID = 1;
+
+if(isset($_GET["groupID"])){
+    $actualGroupID = $_GET["groupID"];
+}
+
 ?>
