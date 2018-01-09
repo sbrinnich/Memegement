@@ -2,8 +2,8 @@
 
 // Redirect zu index wenn nicht eingeloggt
 if(!isset($_SESSION['loginUsername'])){
-    header('Location: home.php', true, 301);
-    exit();
+    //header('Location: home.php', true, 301);
+    //exit();
 }
 
 // Prüfen ob alles eingegeben wurde
@@ -13,7 +13,6 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
         "PWD"=>$DB_PASSWORD,
         "Database"=>$DB_NAME);
 
-    /*
     $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
     $procedure_params = array(
@@ -21,8 +20,13 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
         array($_POST['beschreibung'], SQLSRV_PARAM_OUT),
         array($_SESSION['loginUsername'], SQLSRV_PARAM_OUT)
     );
-    $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderName = ?";
-    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);*/
+    $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderId = ?";
+    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+    $exec = sqlsrv_execute($stmt);
+
+    sqlsrv_free_stmt($stmt);
+    sqlsrv_close($conn);
 }
 
 ?>

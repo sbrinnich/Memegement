@@ -9,7 +9,6 @@ if(!isset($_SESSION['currentPage'])){
 if(isset($_GET['seite'])){
     $_SESSION['currentPage'] = $_GET['seite'];
 }
-
 include_once "conf.php";
 
 ?>
