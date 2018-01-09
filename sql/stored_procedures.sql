@@ -18,6 +18,17 @@ END CATCH
 
 GO
 
+
+CREATE PROCEDURE [dbo].[usp_benutzerIdSuchen]
+    @benutzerName varchar(15),
+    @id int OUTPUT
+AS
+  SET NOCOUNT ON
+  SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
+  RETURN
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_gruppeAnlegen]
     @name         VARCHAR(20),
     @beschreibung VARCHAR(1024),
@@ -36,7 +47,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_gruppenBildÄndern]
+CREATE PROCEDURE [dbo].[usp_gruppenBildAendern]
     @id          INT,
     @gruppenBild INT
 AS
@@ -54,7 +65,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_benutzerBildÄndern]
+CREATE PROCEDURE [dbo].[usp_benutzerBildAendern]
     @benutzerId INT,
     @profilBild INT
 AS
