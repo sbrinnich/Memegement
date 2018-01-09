@@ -397,13 +397,12 @@ AS
   SELECT
     @benutzerName = A.benutzerName,
     @beitrittsDatum = A.beitrittsDatum,
-    @beitrittsDatum = B.link
+    @link = B.link
   FROM
     (SELECT *
      FROM Troll
      WHERE id = @id) A
-    JOIN (SELECT *
-          FROM Bild) B ON A.profilBild = B.funObjektId;
+    JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
 
 GO
 
@@ -582,14 +581,14 @@ CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
     @id2                    INT OUTPUT,
     @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link                   VARCHAR(256) OUTPUT,
+    @text                   VARCHAR(1024) OUTPUT,
     @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
     @titel = F.titel,
     @durchschnittsBewertung = F.durchschnittsBewertung,
-    @link = W.link,
+    @text = W.text,
     @datum = F.uploadDatum
   FROM Witz W
     JOIN
@@ -630,8 +629,9 @@ GO
 
 -- ein Funobjekt zurückgeben, dass einen Typen hat, der Anzeigt was es is, -> Objekt, titel, ersteller, hochlade datum, durchschnittsbewertung
 
-CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
+CREATE PROCEDURE [dbo].[usp_funObjektAnzeigen]
     @id INT,
+    @typ VARCHAR(1) OUTPUT,
     @name VARCHAR(20) OUTPUT,
     @beschreibung VARCHAR(1024) OUTPUT,
     @gruendungsDatum DATE OUTPUT,
