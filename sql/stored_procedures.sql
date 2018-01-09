@@ -750,3 +750,4 @@ GO
 
 
 -- stored procedure, die schaut ob ein troll ein besitzer einer Gruppe ist
+
