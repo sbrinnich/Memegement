@@ -230,11 +230,11 @@ CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
     @limit INT
 AS
 
-  SELECT TOP @limit
+  SELECT
     F.id, F.titel, F.durchschnittsBewertung, F.erstellerId, B.typ, B.link
   FROM Bild B JOIN FunObjekt F ON B.funObjektId = F.id
   ORDER BY F.id
-  OFFSET @offset ROWS;
+  OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
@@ -244,11 +244,11 @@ CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
     @limit INT
 AS
 
-  SELECT TOP @limit
+  SELECT
     F.id, F.titel, F.durchschnittsBewertung, F.erstellerId, V.dauer, V.link
   FROM Video V JOIN FunObjekt F ON V.funObjektId = F.id
   ORDER BY F.id
-    OFFSET @offset ROWS;
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
@@ -258,10 +258,41 @@ CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
     @limit INT
 AS
 
-  SELECT TOP @limit
+  SELECT
     F.id, F.titel, F.durchschnittsBewertung, F.erstellerId, W.text
   FROM Witz W JOIN FunObjekt F ON W.funObjektId = F.id
   ORDER BY F.id
-    OFFSET @offset ROWS;
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
-  GO
+GO
+
+
+-- gibt zurück ob ein der angegebene User das Angegebene Passwort hat, 1 ist ja, alles andere ist nein
+CREATE PROCEDURE [dbo].[usp_benutzerLoginCheck]
+    @benutzerName VARCHAR(15),
+    @passwortHash VARCHAR(256),
+    @benutzerAnzahl INT OUTPUT
+  AS
+    SELECT @benutzerAnzahl = COUNT(*) FROM Troll
+        WHERE benutzerName = @benutzerName AND
+          passwortHash = @passwortHash;
+  RETURN
+
+GO
+
+
+--beitrittsdatum, userbild, name,
+  CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
+      @id INT
+  AS
+    SELECT A.id, A.benutzerName, A.beitrittsDatum, B.link FROM
+      (SELECT * FROM Troll WHERE id = @id) A
+      JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
+
+GO
+
+
+--letzten x Beiträge, Videos, Bilder von bestimmten Troll
+
+
+-- best bewertetsten -II-
