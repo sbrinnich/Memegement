@@ -2,7 +2,7 @@
 
 // Redirect zu index wenn nicht eingeloggt
 if(!isset($_SESSION['loginUsername'])){
-    header('Location: home.php', true, 301);
+    header('Location: index.php?seite=home', true, 301);
     exit();
 }
 
@@ -13,16 +13,31 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
         "PWD"=>$DB_PASSWORD,
         "Database"=>$DB_NAME);
 
-
     $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
     $procedure_params = array(
-        array($_POST['gruppenname'], SQLSRV_PARAM_OUT),
-        array($_POST['beschreibung'], SQLSRV_PARAM_OUT),
         array($_SESSION['loginUsername'], SQLSRV_PARAM_OUT)
     );
-    $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderName = ?";
+    $sql = "EXEC usp_benutzerIdSuchen @benutzerName = ?";
     $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+    if(sqlsrv_execute($stmt)){
+        while()
+
+        $procedure_params = array(
+            array($_POST['gruppenname'], SQLSRV_PARAM_OUT),
+            array($_POST['beschreibung'], SQLSRV_PARAM_OUT),
+            array($benutzerId, SQLSRV_PARAM_OUT)
+        );
+
+        $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderId = ?";
+        $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+        $exec = sqlsrv_execute($stmt);
+
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+    }
 }
 
 ?>

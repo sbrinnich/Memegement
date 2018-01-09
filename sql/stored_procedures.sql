@@ -18,6 +18,17 @@ END CATCH
 
 GO
 
+
+CREATE PROCEDURE [dbo].[usp_benutzerIdSuchen]
+    @benutzerName varchar(15),
+    @id int OUTPUT
+AS
+  SET NOCOUNT ON
+  SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
+  RETURN
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_gruppeAnlegen]
     @name         VARCHAR(20),
     @beschreibung VARCHAR(1024),
@@ -36,7 +47,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_gruppenBildÄndern]
+CREATE PROCEDURE [dbo].[usp_gruppenBildAendern]
     @id          INT,
     @gruppenBild INT
 AS
@@ -54,7 +65,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_benutzerBildÄndern]
+CREATE PROCEDURE [dbo].[usp_benutzerBildAendern]
     @benutzerId INT,
     @profilBild INT
 AS
@@ -157,7 +168,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_FunObjektBewerten]
+CREATE PROCEDURE [dbo].[usp_funObjektBewerten]
     @bewerterId       INT,
     @bewertungsObjekt INT,
     @bewertung        FLOAT
@@ -175,7 +186,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_FunObjektKommentieren]
+CREATE PROCEDURE [dbo].[usp_funObjektKommentieren]
     @kommentiererId  INT,
     @kommentarObjekt INT,
     @text            VARCHAR(256)
@@ -193,7 +204,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_FunObjektKommentiereLaden]
+CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
     @id INT
 AS
   BEGIN TRY
@@ -212,3 +223,44 @@ AS
   END CATCH
 
 GO
+
+CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
+    @offset INT,
+    @limit INT
+AS
+
+  SELECT TOP @limit
+    F.id, F.titel, F.durchschnittsBewertung, F.erstellerId, B.typ, B.link
+  FROM Bild B JOIN FunObjekt F ON B.funObjektId = F.id
+  ORDER BY F.id
+  OFFSET @offset ROWS;
+
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
+    @offset INT,
+    @limit INT
+AS
+
+  SELECT TOP @limit
+    F.id, F.titel, F.durchschnittsBewertung, F.erstellerId, V.dauer, V.link
+  FROM Video V JOIN FunObjekt F ON V.funObjektId = F.id
+  ORDER BY F.id
+    OFFSET @offset ROWS;
+
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
+    @offset INT,
+    @limit INT
+AS
+
+  SELECT TOP @limit
+    F.id, F.titel, F.durchschnittsBewertung, F.erstellerId, W.text
+  FROM Witz W JOIN FunObjekt F ON W.funObjektId = F.id
+  ORDER BY F.id
+    OFFSET @offset ROWS;
+
+  GO
