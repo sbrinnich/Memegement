@@ -39,20 +39,24 @@
 
                 //Statisch
                 $Id = 1;
+                $Trollname = '';
+                $Trollbeitrittsdatum = '';
+                $Trolllink = '';
 
                 $procedure_params = array(
                     array($Id, SQLSRV_PARAM_IN),
-                    array()
+                    array(&$Trollname, SQLSRV_PARAM_INOUT),
+                    array(&$Trollbeitrittsdatum, SQLSRV_PARAM_INOUT),
+                    array(&$Trolllink, SQLSRV_PARAM_INOUT)
                 );
-                $sql = "EXEC usp_benutzerAnlegen @benutzerName = ?, @passwortHash = ?";
+                $sql = "EXEC usp_benutzerProfilAnzeigen @id = ?,@benutzerName = ?,@beitrittsDatum = ?, @link = ? ";
                 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
-
                 if(sqlsrv_execute($stmt)) {
                     sqlsrv_next_result($stmt);
+
                     sqlsrv_free_stmt($stmt);
 
-                    $_SESSION['loginUsername'] = $_POST['username'];
-                    header('Location: index.php?seite=home', true, 301);
+
                     sqlsrv_close($conn);
                     exit();
                 }else{
@@ -62,8 +66,9 @@
 
 
 
-                echo "<h1> " + $_SESSION['loginUsername'] +" </h1>"
-                    ;
+                echo    "<img src=\"" + $Trolllink + "\">" +
+                        "<h1> " + $Trollname +" </h1>" +
+                        "<h3> \" + $Trollbeitrittsdatum +\" </h3>";
                 ?>
             </div>
         </div>
