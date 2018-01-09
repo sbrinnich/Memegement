@@ -388,9 +388,9 @@ DROP PROCEDURE IF EXISTS usp_benutzerProfilAnzeigen;
 GO
 
 
-ALTER PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
+CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
     @id             INT,
-    @benutzerName   TEXT OUTPUT,
+    @benutzerName   VARCHAR(15) OUTPUT,
     @beitrittsDatum DATE OUTPUT,
     @link           VARCHAR(256) OUTPUT
 AS
@@ -604,6 +604,8 @@ GO
 -- gruppe nach ID - Alle daten, name, gründerinfo, gründungsdatum, mitgliederanzahl, gruppenbild,
 
 DROP PROCEDURE IF EXISTS usp_gruppenDatenAnzeigen;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
   @id INT,
@@ -619,10 +621,10 @@ AS
     @beschreibung = G.beschreibung,
     @gruendungsDatum = G.gruendungsDatum,
     @gruenderName = T.benutzerName,
-    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft group by gruppenId),
+    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft where gruppenId = @id),
     @gruppenBildLink = B.link
-  FROM (Select * FROM Gruppe WHERE id = @id) G JOIN Troll T
-      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId;
+  FROM Gruppe G JOIN Troll T
+      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId WHERE G.id = @id;
 
 GO
 
@@ -636,6 +638,14 @@ CREATE PROCEDURE [dbo].[usp_bildInfosAnzeigen]
     @link VARCHAR(256) OUTPUT
   AS
   SELECT
+    @name = G.name,
+    @beschreibung = G.beschreibung,
+    @gruendungsDatum = G.gruendungsDatum,
+    @gruenderName = T.benutzerName,
+    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft where gruppenId = @id),
+    @gruppenBildLink = B.link
+  FROM Gruppe G JOIN Troll T
+      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId WHERE G.id = @id;
     @titel = F.titel,
     @erstellerName = T.benutzerName,
     @uploadDatum = F.uploadDatum,
@@ -750,4 +760,3 @@ GO
 
 
 -- stored procedure, die schaut ob ein troll ein besitzer einer Gruppe ist
-
