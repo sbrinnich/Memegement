@@ -1,7 +1,7 @@
 USE Memegement
 GO
 
-alter PROCEDURE [dbo].[usp_benutzerAnlegen]
+ALTER PROCEDURE [dbo].[usp_benutzerAnlegen]
     @benutzerName varchar(15),
     @passwortHash varchar(256)
 AS
@@ -283,9 +283,9 @@ GO
 
 --Gibt Benutzername, Beitrittsdatum, Profilbild-Link für einen bestimmten User zurück
 CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
-      @id INT
-      @benutzerName VARCHAR(15) OUTPUT
-      @beitrittsDatum DATE  OUTPUT
+      @id INT,
+      @benutzerName VARCHAR(15) OUTPUT,
+      @beitrittsDatum DATE  OUTPUT,
       @link VARCHAR(256) OUTPUT
   AS
     SELECT A.id, A.benutzerName, A.beitrittsDatum, B.link FROM
