@@ -40,12 +40,14 @@
                 //Statisch
                 $Id = 1;
                 $Trollname = '';
+                $Trollbeitrittsdatum = '';
+                $Trolllink = '';
 
                 $procedure_params = array(
                     array($Id, SQLSRV_PARAM_IN),
-                    array(&$Troll, SQLSRV_PARAM_INOUT)
+                    array(&$Trollname, SQLSRV_PARAM_INOUT)
                 );
-                $sql = "EXEC usp_benutzerProfilAnzeigen @id = ?,@benutzerName ";
+                $sql = "EXEC usp_benutzerProfilAnzeigen @id = ?,@benutzerName = ?,@beitrittsDatum = ?, @link = ? ";
                 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
 

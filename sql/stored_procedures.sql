@@ -1,7 +1,7 @@
 USE Memegement
 GO
 
-alter PROCEDURE [dbo].[usp_benutzerAnlegen]
+ALTER PROCEDURE [dbo].[usp_benutzerAnlegen]
     @benutzerName varchar(15),
     @passwortHash varchar(256)
 AS

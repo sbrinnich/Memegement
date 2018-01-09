@@ -133,17 +133,25 @@ body {
 
 .img-circle {
     border-radius: 50% !important;
-    width: 150px !important;
+    width: 20% !important;
+    display: inline-block !important;
 }
 
 .groupname {
     display: inline-block !important;
+    margin-top: 5px !important;
+    text-align: center !important;
+    vertical-align: 0 !important;
+    font-size: 250% !important;
+    width: 50% !important;
 }
 
 .membercount {
     display: inline-block !important;
+    margin-top: 5px !important;
+    text-align: center !important;
 }
 
 .groupElement {
-    height: 500px !important;
+    height: 400px !important;
 }
