@@ -227,7 +227,7 @@ WHILE @Input < 1001
   BEGIN
     SET @Gruender = CAST(RAND() * 500000 AS INT) + 1
     INSERT INTO Gruppe(name, beschreibung, gruendungsDatum, gruenderId, gruppenBild) VALUES
-      ('Gruppe'+cast(@Input AS VARCHAR(9)) , 'Beste Gruppe ever! NEIN WIR SIND DIE BESTEN! NEIN WIR!' , '2014-03-23' , @Gruender , 2);
+      ('Gruppe'+cast(@Input AS VARCHAR(9)) , 'Beste Gruppe ever! NEIN WIR SIND DIE BESTEN! NEIN WIR!' , DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) , @Gruender , 2);
     INSERT INTO GruppenMitgliedschaft(trollId, gruppenId, beitrittsDatum) VALUES
       ( @Gruender , @Input ,  DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) );
     SET @Input = @Input + 1
