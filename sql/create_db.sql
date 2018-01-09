@@ -1,5 +1,5 @@
 -- Create Database
-USE master;
+USE Master;
 GO
 
 IF EXISTS(SELECT * FROM sysdatabases WHERE name = 'Memegement')
@@ -64,7 +64,7 @@ Create table Witz (
 
 Create table Gruppe (
   id int not null primary key identity(1,1),
-  name varchar(20) not null UNiQUE,
+  name varchar(20) not null,
   beschreibung varchar(1024),
   gruendungsDatum date not null,
   gruenderId int not null,
