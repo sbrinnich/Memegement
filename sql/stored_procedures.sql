@@ -6,19 +6,19 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerAnlegen]
-    @benutzerName varchar(15),
-    @passwortHash varchar(256)
+    @benutzerName VARCHAR(15),
+    @passwortHash VARCHAR(256)
 AS
-BEGIN TRY
-BEGIN TRANSACTION
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.Troll (benutzerName,passwortHash,beitrittsDatum) VALUES
-  (@benutzerName,@passwortHash,GETDATE())
-COMMIT TRANSACTION
-END TRY
-BEGIN CATCH
-ROLLBACK TRANSACTION
-END CATCH
+  BEGIN TRY
+  BEGIN TRANSACTION
+  SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+  INSERT INTO dbo.Troll (benutzerName, passwortHash, beitrittsDatum) VALUES
+    (@benutzerName, @passwortHash, GETDATE())
+  COMMIT TRANSACTION
+  END TRY
+  BEGIN CATCH
+  ROLLBACK TRANSACTION
+  END CATCH
 
 GO
 
@@ -28,11 +28,13 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerIdSuchen]
-    @benutzerName varchar(15),
-    @id int OUTPUT
+    @benutzerName VARCHAR(15),
+    @id           INT OUTPUT
 AS
   SET NOCOUNT ON
-  SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
+  SELECT @id = id
+  FROM Troll
+  WHERE benutzerName = @benutzerName
 
 GO
 
@@ -60,7 +62,6 @@ AS
 GO
 
 
-
 DROP PROCEDURE IF EXISTS usp_gruppenBildAendern;
 GO
 
@@ -82,7 +83,6 @@ AS
   END CATCH
 
 GO
-
 
 
 DROP PROCEDURE IF EXISTS usp_benutzerBildAendern;
@@ -108,7 +108,6 @@ AS
 GO
 
 
-
 DROP PROCEDURE usp_gruppeBeitreten;
 GO
 
@@ -129,7 +128,6 @@ AS
   END CATCH
 
 GO
-
 
 
 DROP PROCEDURE IF EXISTS usp_funObjektAnlegenVideo;
@@ -160,7 +158,6 @@ AS
 GO
 
 
-
 DROP PROCEDURE IF EXISTS usp_funObjektAnlegenBild;
 GO
 
@@ -187,7 +184,6 @@ AS
   END CATCH
 
 GO
-
 
 
 DROP PROCEDURE IF EXISTS usp_funObjektAnlegenWitz;
@@ -240,7 +236,6 @@ AS
 GO
 
 
-
 DROP PROCEDURE IF EXISTS usp_funObjektKommentieren;
 GO
 
@@ -264,27 +259,26 @@ AS
 GO
 
 
-
 DROP PROCEDURE IF EXISTS usp_funObjektKommentareLaden;
 GO
 
 
 CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
-    @id INT,
-    @verfasser VARCHAR(15) OUTPUT,
-    @text VARCHAR(256) OUTPUT,
+    @id               INT,
+    @verfasser        VARCHAR(15) OUTPUT,
+    @text             VARCHAR(256) OUTPUT,
     @erstellungsDatum DATE OUTPUT
 AS
   SELECT
     @verfasser = T.benutzerName,
     @text = K.text,
     @erstellungsDatum = K.erstellungsDatum
-  FROM Kommentar K JOIN Troll T ON K.kommentiererID = T.id
+  FROM Kommentar K
+    JOIN Troll T ON K.kommentiererID = T.id
   WHERE kommentarObjekt = @id
   ORDER BY cast(erstellungsDatum AS DATETIME) ASC;
 
 GO
-
 
 
 DROP PROCEDURE IF EXISTS usp_bilderAnzeigen;
@@ -292,13 +286,13 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
-  @offset INT,
-  @limit INT,
-  @id INT OUTPUT,
-  @titel VARCHAR(50) OUTPUT,
-  @durchschnittsBewertung FLOAT OUTPUT,
-  @typ VARCHAR(10) OUTPUT,
-  @link VARCHAR(256) OUTPUT
+    @offset                 INT,
+    @limit                  INT,
+    @id                     INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @typ                    VARCHAR(10) OUTPUT,
+    @link                   VARCHAR(256) OUTPUT
 AS
 
   SELECT
@@ -307,13 +301,12 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @typ = B.typ,
     @link = B.link
-  FROM Bild B JOIN FunObjekt F ON B.funObjektId = F.id
+  FROM Bild B
+    JOIN FunObjekt F ON B.funObjektId = F.id
   ORDER BY F.id
-  OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
-
-
 
 
 DROP PROCEDURE IF EXISTS usp_videosAnzeigen;
@@ -321,27 +314,27 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
-  @offset INT,
-  @limit INT,
-  @id INT OUTPUT,
-  @titel VARCHAR(50) OUTPUT,
-  @durchschnittsBewertung FLOAT OUTPUT,
-  @dauer VARCHAR(10) OUTPUT,
-  @link VARCHAR(256) OUTPUT
+    @offset                 INT,
+    @limit                  INT,
+    @id                     INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @dauer                  VARCHAR(10) OUTPUT,
+    @link                   VARCHAR(256) OUTPUT
 AS
 
-SELECT
-  @id = F.id,
-  @titel = F.titel,
-  @durchschnittsBewertung = F.durchschnittsBewertung,
-  @dauer = V.dauer,
-  @link = V.link
-  FROM Video V JOIN FunObjekt F ON V.funObjektId = F.id
+  SELECT
+    @id = F.id,
+    @titel = F.titel,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @dauer = V.dauer,
+    @link = V.link
+  FROM Video V
+    JOIN FunObjekt F ON V.funObjektId = F.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
-
 
 
 DROP PROCEDURE IF EXISTS usp_witzeAnzeigen;
@@ -349,12 +342,12 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
-    @offset INT,
-    @limit INT,
-    @id INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @offset                 INT,
+    @limit                  INT,
+    @id                     INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @text VARCHAR(1024) OUTPUT
+    @text                   VARCHAR(1024) OUTPUT
 AS
 
   SELECT
@@ -362,7 +355,8 @@ AS
     @titel = F.titel,
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @text = W.text
-  FROM Witz W JOIN FunObjekt F ON W.funObjektId = F.id
+  FROM Witz W
+    JOIN FunObjekt F ON W.funObjektId = F.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
@@ -376,13 +370,14 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerLoginCheck]
-    @benutzerName VARCHAR(15),
-    @passwortHash VARCHAR(256),
+    @benutzerName   VARCHAR(15),
+    @passwortHash   VARCHAR(256),
     @benutzerAnzahl INT OUTPUT
-  AS
-    SELECT @benutzerAnzahl = COUNT(*) FROM Troll
-        WHERE benutzerName = @benutzerName AND
-          passwortHash = @passwortHash;
+AS
+  SELECT @benutzerAnzahl = COUNT(*)
+  FROM Troll
+  WHERE benutzerName = @benutzerName AND
+        passwortHash = @passwortHash;
 
 GO
 
@@ -394,16 +389,21 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
-      @id INT,
-      @benutzerName VARCHAR(15) OUTPUT,
-      @beitrittsDatum DATE  OUTPUT,
-      @link VARCHAR(256) OUTPUT
-  AS
-    SELECT @benutzerName=A.benutzerName,
-      @beitrittsDatum=A.beitrittsDatum,
-      @beitrittsDatum=B.link FROM
-      (SELECT * FROM Troll WHERE id = @id) A
-      JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
+    @id             INT,
+    @benutzerName   VARCHAR(15) OUTPUT,
+    @beitrittsDatum DATE OUTPUT,
+    @link           VARCHAR(256) OUTPUT
+AS
+  SELECT
+    @benutzerName = A.benutzerName,
+    @beitrittsDatum = A.beitrittsDatum,
+    @beitrittsDatum = B.link
+  FROM
+    (SELECT *
+     FROM Troll
+     WHERE id = @id) A
+    JOIN (SELECT *
+          FROM Bild) B ON A.profilBild = B.funObjektId;
 
 GO
 
@@ -415,14 +415,14 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
-  @id INT,
-  @offset INT,
-  @limit INT,
-  @id2 INT OUTPUT,
-  @titel VARCHAR(50) OUTPUT,
-  @durchschnittsBewertung FLOAT OUTPUT,
-  @link VARCHAR(256) OUTPUT,
-  @datum DATE OUTPUT
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -430,8 +430,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = V.link,
     @datum = F.uploadDatum
-  FROM Video V JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Video V
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON V.funObjektId = F.id
   ORDER BY F.uploadDatum DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -444,14 +447,14 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -459,8 +462,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = B.link,
     @datum = F.uploadDatum
-  FROM Bild B JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Bild B
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON B.funObjektId = F.id
   ORDER BY F.uploadDatum DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -468,21 +474,19 @@ AS
 GO
 
 
-
-
 DROP PROCEDURE IF EXISTS usp_benutzerWitzeAnzeigenNachDatum;
 GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @text VARCHAR(1024) OUTPUT,
-    @datum DATE OUTPUT
+    @text                   VARCHAR(1024) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -490,8 +494,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @text = W.text,
     @datum = F.uploadDatum
-  FROM Witz W JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Witz W
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON W.funObjektId = F.id
   ORDER BY F.uploadDatum DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -505,14 +512,14 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT,
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT,
 AS
   SELECT
     @id2 = F.id,
@@ -520,8 +527,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = V.link,
     @datum = F.uploadDatum
-  FROM Video V JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Video V
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON V.funObjektId = F.id
   ORDER BY F.durchschnittsBewertung DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -529,20 +539,19 @@ AS
 GO
 
 
-
 DROP PROCEDURE IF EXISTS usp_benutzerBilderAnzeigenNachBewertung;
 GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -550,8 +559,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = B.link,
     @datum = F.uploadDatum
-  FROM Bild B JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Bild B
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON B.funObjektId = F.id
   ORDER BY F.durchschnittsBewertung DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -559,21 +571,19 @@ AS
 GO
 
 
-
-
 DROP PROCEDURE IF EXISTS usp_benutzerWitzeAnzeigenNachBewertung;
 GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -581,8 +591,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = W.link,
     @datum = F.uploadDatum
-  FROM Witz W JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Witz W
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON W.funObjektId = F.id
   ORDER BY F.durchschnittsBewertung DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -590,6 +603,8 @@ AS
 GO
 
 -- gruppe nach ID - Alle daten, name, gründerinfo, gründungsdatum, mitgliederanzahl, gruppenbild,
+
+DROP PROCEDURE IF EXISTS usp_gruppenDatenAnzeigen;
 
 CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
   @id INT,
