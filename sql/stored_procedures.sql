@@ -2,22 +2,32 @@ USE Memegement
 GO
 
 CREATE PROCEDURE [dbo].[usp_benutzerAnlegen]
-    @benutzerName VARCHAR(15),
-    @passwortHash VARCHAR(256),
-    @profilBild   INT
+  @benutzerName varchar(15),
+  @passwortHash  varchar(256),
 AS
-  BEGIN TRY
-  BEGIN TRANSACTION
-  SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-  INSERT INTO dbo.Troll (benutzerName, passwortHash, beitrittsDatum, profilBild) VALUES
-    (@benutzerName, @passwortHash, GETDATE(), @profilBild)
-  COMMIT TRANSACTION
-  END TRY
-  BEGIN CATCH
-  ROLLBACK TRANSACTION
-  END CATCH
+BEGIN TRY
+BEGIN TRANSACTION
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+INSERT INTO dbo.Troll(benutzerName,passwortHash,beitrittsDatum) values
+  ( @benutzerName,@passwortHash, GETDATE())
+COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+END CATCH
 
 GO
+
+
+CREATE PROCEDURE [dbo].[usp_benutzerIdSuchen]
+    @benutzerName varchar(15),
+    @id int OUTPUT
+AS
+  SET NOCOUNT ON
+  SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
+  RETURN
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_gruppeAnlegen]
     @name         VARCHAR(20),
@@ -37,7 +47,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_gruppenBildÄndern]
+CREATE PROCEDURE [dbo].[usp_gruppenBildAendern]
     @id          INT,
     @gruppenBild INT
 AS
@@ -55,7 +65,7 @@ AS
 
 GO
 
-CREATE PROCEDURE [dbo].[usp_benutzerBildÄndern]
+CREATE PROCEDURE [dbo].[usp_benutzerBildAendern]
     @benutzerId INT,
     @profilBild INT
 AS
