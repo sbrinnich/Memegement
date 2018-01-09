@@ -131,6 +131,8 @@ body {
     font-size: 20px;
 }
 
+/* GRUPPEN */
+
 .img-circle {
     border-radius: 50% !important;
     width: 20% !important;
@@ -154,4 +156,34 @@ body {
 
 .groupElement {
     height: 400px !important;
+}
+
+/* BILDER, WITZE, VIDEOS */
+
+.objekte_titel {
+    font-size: 40px;
+}
+
+.objekte_ersteller {
+    font-size: 30px;
+    padding-left: 20px;
+}
+
+.objekte_datum {
+    font-size: 20px;
+}
+
+.objekte_bewertung {
+    font-size: 15px;
+}
+
+.objekte_object {
+    height: 250px !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.objekte_image {
+    width: 80%;
+    height: 100%;
 }
