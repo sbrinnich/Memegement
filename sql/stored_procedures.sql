@@ -518,7 +518,7 @@ CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
     @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
     @link                   VARCHAR(256) OUTPUT,
-    @datum                  DATE OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -604,6 +604,8 @@ GO
 -- gruppe nach ID - Alle daten, name, gründerinfo, gründungsdatum, mitgliederanzahl, gruppenbild,
 
 DROP PROCEDURE IF EXISTS usp_gruppenDatenAnzeigen;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
   @id INT,
@@ -619,10 +621,10 @@ AS
     @beschreibung = G.beschreibung,
     @gruendungsDatum = G.gruendungsDatum,
     @gruenderName = T.benutzerName,
-    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft group by gruppenId),
+    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft where gruppenId = @id),
     @gruppenBildLink = B.link
-  FROM (Select * FROM Gruppe WHERE id = @id) G JOIN Troll T
-      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId;
+  FROM Gruppe G JOIN Troll T
+      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId WHERE G.id = @id;
 
 GO
 
@@ -644,10 +646,10 @@ AS
     @beschreibung = G.beschreibung,
     @gruendungsDatum = G.gruendungsDatum,
     @gruenderName = T.benutzerName,
-    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft group by gruppenId),
+    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft where gruppenId = @id),
     @gruppenBildLink = B.link
-  FROM (Select * FROM Gruppe WHERE id = @id) G JOIN Troll T
-      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId;
+  FROM Gruppe G JOIN Troll T
+      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId WHERE G.id = @id;
 
 GO
 
