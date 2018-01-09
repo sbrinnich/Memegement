@@ -39,7 +39,7 @@ if(isset($_POST['username']) && isset($_POST['passwort']) && isset($_POST['passw
         $_SESSION['status'] = '';
         ?>
 
-        <form id="form_register" method="post" action="/registrieren.php">
+        <form id="form_register" method="post" action="?seite=registrieren">
             <input type="text" class="form-control" name="username" placeholder="Username" /><br />
             <input type="password" class="form-control" name="passwort" placeholder="Passwort" /><br />
             <input type="password" class="form-control" name="passwort_repeat" placeholder="Passwort Wiederholen" /><br />
