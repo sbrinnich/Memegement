@@ -13,7 +13,7 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
         "PWD"=>$DB_PASSWORD,
         "Database"=>$DB_NAME);
 
-    /*
+
     $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
     $procedure_params = array(
@@ -22,7 +22,7 @@ if(isset($_POST['gruppenname']) && isset($_POST['beschreibung'])){
         array($_SESSION['loginUsername'], SQLSRV_PARAM_OUT)
     );
     $sql = "EXEC usp_gruppeAnlegen @name = ?, @beschreibung = ?, @gruenderName = ?";
-    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);*/
+    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 }
 
 ?>

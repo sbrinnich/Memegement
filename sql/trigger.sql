@@ -10,8 +10,8 @@ CREATE TRIGGER  tr_neueBewertung
   ON Bewertung
   AFTER INSERT
 AS
-  DECLARE @bewertungsObjekt int = (Select bewertungsObjekt FROM inserted),
-          @durchschnittsBewertung float = (SELECT avg(bewertung) FROM Bewertung WHERE bewertungsObjekt = @BewertungsObjekt);
+  DECLARE @bewertungsObjekt int = (Select bewertungsObjekt FROM inserted);
+  DECLARE @durchschnittsBewertung float = (SELECT avg(bewertung) FROM Bewertung WHERE bewertungsObjekt = @bewertungsObjekt );
 
   UPDATE FunObjekt SET durchschnittsBewertung = (@durchschnittsBewertung)
       WHERE id = @bewertungsObjekt;
@@ -26,9 +26,9 @@ CREATE TRIGGER tr_neueGruppe
   ON Gruppe
   AFTER INSERT
 AS
-  DECLARE @gruppenId int = (Select id FROM inserted),
-          @erstellerId int = (Select gruenderId FROM inserted),
-          @inCount int = (Select Count(*) FROM inserted);
+  DECLARE @gruppenId int = (Select id FROM inserted);
+  DECLARE @erstellerId int = (Select gruenderId FROM inserted);
+  DECLARE @inCount int = (Select Count(*) FROM inserted);
 
   IF(@inCount > 0)
       BEGIN
@@ -46,8 +46,8 @@ CREATE TRIGGER tr_neuerUser
   ON Troll
 AFTER INSERT
 AS
-  DECLARE @benutzerName VARCHAR(15) = (Select benutzerName FROM inserted),
-  @passwortHash VARCHAR(256) = (Select passwortHash FROM inserted);
+  DECLARE @benutzerName VARCHAR(15) = (Select benutzerName FROM inserted);
+  DECLARE @passwortHash VARCHAR(256) = (Select passwortHash FROM inserted);
 
   IF(ltrim(rtrim(isNull(@benutzerName,''))) = '' OR @passwortHash < 64)
       BEGIN
@@ -66,8 +66,8 @@ CREATE TRIGGER tr_neuesFunObjekt
   ON FunObjekt
 AFTER INSERT
 AS
-  DECLARE @titel VARCHAR(50) = (Select titel FROM inserted),
-  @bewertung FLOAT = (Select durchschnittsBewertung FROM inserted);
+  DECLARE @titel VARCHAR(50) = (Select titel FROM inserted);
+  DECLARE @bewertung FLOAT = (Select durchschnittsBewertung FROM inserted);
 
   IF(ltrim(rtrim(isNull(@titel,''))) = '' OR @bewertung IS NOT NULL)
     BEGIN

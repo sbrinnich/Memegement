@@ -68,7 +68,7 @@ Create table Gruppe (
   beschreibung varchar(1024),
   gruendungsDatum date not null,
   gruenderId int not null,
-  gruppenBild int not null
+  gruppenBild int
 );
 
 Create table Bewertung (
