@@ -45,12 +45,13 @@
 
                 $procedure_params = array(
                     array($Id, SQLSRV_PARAM_IN),
-                    array(&$Trollname, SQLSRV_PARAM_INOUT),
-                    array(&$Trollbeitrittsdatum, SQLSRV_PARAM_INOUT),
-                    array(&$Trolllink, SQLSRV_PARAM_INOUT)
+                    array(&$Trollname, SQLSRV_PARAM_INOUT)
                 );
                 $sql = "EXEC usp_benutzerProfilAnzeigen @id = ?,@benutzerName = ?,@beitrittsDatum = ?, @link = ? ";
                 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+
+
                 if(sqlsrv_execute($stmt)) {
                     sqlsrv_next_result($stmt);
 
@@ -66,9 +67,8 @@
 
 
 
-                echo    "<img src=\"". $Trolllink."\">" .
-                        "<h1> ".$Trollname." </h1>" .
-                        "<h3> \" + $Trollbeitrittsdatum +\" </h3>";
+                echo "<h1> " + $_SESSION['loginUsername'] +" </h1>"
+                    ;
                 ?>
             </div>
         </div>
