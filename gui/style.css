@@ -158,6 +158,37 @@ body {
     height: 400px !important;
 }
 
+
+.img-group {
+    width: 40% !important;
+    height: auto;
+    display: inline-block !important;
+}
+
+.group-creator {
+    display: inline;
+    text-align: center;
+}
+
+.group-date {
+    display: inline;
+    text-align: center;
+}
+
+
+.group-name-xxl {
+    display: inline;
+    text-align: center;
+}
+
+.div-group-site {
+    display: inline;
+    width: 40%;
+    float: right;
+    text-align: center !important;
+    padding-top: 50px !important;
+}
+
 /* BILDER, WITZE, VIDEOS */
 
 .objekte_titel {
