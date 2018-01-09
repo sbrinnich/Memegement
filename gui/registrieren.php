@@ -2,7 +2,7 @@
 
 // Redirect zu index wenn bereits eingeloggt
 if(isset($_SESSION['loginUsername'])){
-    header('Location: home.php', true, 301);
+    header('Location: index.php?seite=home', true, 301);
     exit();
 }
 
@@ -12,9 +12,15 @@ if(isset($_POST['username']) && isset($_POST['passwort']) && isset($_POST['passw
         $_SESSION['status'] = 'Passwörter stimmen nicht überein! Bitte versuche es erneut!';
     }else {
         $hashedPasswort = hash('sha256', $_POST['passwort']);
+
         // TODO: Stored Procedure aufrufen zum abspeichern
+
+
+
+
+
         $_SESSION['loginUsername'] = $_POST['username'];
-        header('Location: home.php', true, 301);
+        header('Location: index.php?seite=home', true, 301);
         exit();
     }
 }
