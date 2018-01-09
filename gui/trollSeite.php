@@ -1,16 +1,5 @@
 <?php
 
-session_start();
-
-if(!isset($_SESSION['currentPage'])){
-    $_SESSION['currentPage'] = 'home';
-}
-
-if(isset($_GET['seite'])){
-    $_SESSION['currentPage'] = $_GET['seite'];
-}
-
-include_once "conf.php";
 
 ?>
 
@@ -34,62 +23,103 @@ include_once "conf.php";
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<!-- NAVBAR -->
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="?seite=home">Memegement</a>
-        </div>
+<!-- CONTENT -->
 
-        <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li <?php if($_SESSION['currentPage'] == 'home') echo 'class="active"'; ?>><a href="?seite=home">Home</a></li>
-                <li <?php if($_SESSION['currentPage'] == 'bilder') echo 'class="active"'; ?>><a href="?seite=bilder">Bilder</a></li>
-                <li <?php if($_SESSION['currentPage'] == 'videos') echo 'class="active"'; ?>><a href="?seite=videos">Videos</a></li>
-                <li <?php if($_SESSION['currentPage'] == 'witze') echo 'class="active"'; ?>><a href="?seite=witze">Witze</a></li>
-                <li <?php if($_SESSION['currentPage'] == 'gruppen') echo 'class="active"'; ?>><a href="?seite=gruppen">Gruppen</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
+
+    <div class="row">
+        <div class="col-md-4"></div>
+            <div class="col-md-4">
                 <?php
-                if(isset($_SESSION['loginUsername'])){
-                    ?>
-                    <li id="index_login"><?php echo $_SESSION['loginUsername']; ?></li>
-                    <?php
+
+                $connectionInfo = array( "UID"=>$DB_USERNAME,
+                    "PWD"=>$DB_PASSWORD,
+                    "Database"=>$DB_NAME);
+
+                $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
+
+                //Statisch
+                $Id = 1;
+
+                $procedure_params = array(
+                    array($Id, SQLSRV_PARAM_IN),
+                    array()
+                );
+                $sql = "EXEC usp_benutzerAnlegen @benutzerName = ?, @passwortHash = ?";
+                $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+                if(sqlsrv_execute($stmt)) {
+                    sqlsrv_next_result($stmt);
+                    sqlsrv_free_stmt($stmt);
+
+                    $_SESSION['loginUsername'] = $_POST['username'];
+                    header('Location: index.php?seite=home', true, 301);
+                    sqlsrv_close($conn);
+                    exit();
                 }else{
-                    ?>
-                    <li><a href="?seite=registrieren" id="index_login">Registrieren</a></li>
-                    <li><a href="?seite=login" id="index_login">Login</a></li>
-                    <?php
+                    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
                 }
+                sqlsrv_close($conn);
+
+
+
+                echo "<h1> " + $_SESSION['loginUsername'] +" </h1>"
+                    ;
                 ?>
-            </ul>
+            </div>
         </div>
     </div>
-</nav>
-<!-- END NAVBAR -->
 
-<!-- CONTENT -->
-<div class="container" id="content">
-    <?php
-    switch($_SESSION['currentPage']){
-        case 'bilder': include_once "bilder.php";break;
-        case 'videos': include_once "videos.php";break;
-        case 'witze': include_once "witze.php";break;
-        case 'gruppen': include_once "gruppen.php";break;
-        case 'login': include_once "login.php";break;
-        case 'registrieren': include_once "registrieren.php";break;
-        case 'gruppeErstellen': include_once "gruppeErstellen.php";break;
-        default: include_once "home.php";break;
-    }
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-3">
+                <div class="panel panel-default index_panel">
 
-    ?>
-</div>
+                    <div class="panel-body index_panelbody index_panelleft">
+                        Neueste Beiträge
+                    </div>
+                    <div class="panel-body index_panelbody index_panelleft">
+                        <div class="col-md-3">
+                            <p style="color: white">Video</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="color: white">Bild</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="color: white">Witz</p>
+                        </div>
+                    </div>
+                    <div class="panel-body index_panelbody index_panelleft">
+                        <?php
+
+                        ?>
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-3">
+                <div class="panel panel-default index_panel">
+                    <div class="panel-body index_panelbody index_panelright">
+                        Beste Bewertungen
+                    </div>
+                    <div class="panel-body index_panelbody index_panelleft">
+                        <div class="col-md-3">
+                            <p style="color: white">Video</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="color: white">Bild</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="color: white">Witz</p>
+                        </div>
+                    </div>
+                    <div class="panel-body index_panelbody index_panelleft">
+                        <?php
+
+                        ?>
+                    </div>
+                </div>
+        </div>
+    </div>
+
 <!-- END CONTENT -->
 </body>
 </html>

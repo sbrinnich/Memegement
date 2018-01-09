@@ -130,3 +130,20 @@ body {
     padding-top: 10px;
     font-size: 20px;
 }
+
+.img-circle {
+    border-radius: 50% !important;
+    width: 150px !important;
+}
+
+.groupname {
+    display: inline-block !important;
+}
+
+.membercount {
+    display: inline-block !important;
+}
+
+.groupElement {
+    height: 500px !important;
+}
