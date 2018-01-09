@@ -12,17 +12,6 @@ if (!isset($_SESSION['loginUsername'])) {
 </div><br/>
 
 
-<!--<div class="dropdown pull-right">-->
-<!--    <a class="dropdown-toggle text-muted" data-toggle="dropdown" href="#" id="dropdown-sortmode" title="Sort">-->
-<!--        <small><span class="glyphicon glyphicon-sort"></span>&nbsp;Sort</small>-->
-<!--    </a>-->
-<!--    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-sortmode">-->
-<!--        <li role="menuitem"><a href=# id="date"><span class="glyphicon glyphicon-sort-by-attributes-alt"></span> Nach Erstellungsdatum</a></li>-->
-<!--        <li role="menuitem"><a href=# id="memberCount"><span class="glyphicon glyphicon-sort-by-order-alt"></span> Nach Mitgliederanzahl</a></li>-->
-<!--        <li role="menuitem"><a href=# id="name"><span class="glyphicon glyphicon-sort-by-alphabet"></span> Nach Namen</a></li>-->
-<!--    </ul>-->
-<!--</div>-->
-
 <?php
     $allElements[] = null;
 
@@ -42,8 +31,8 @@ if (!isset($_SESSION['loginUsername'])) {
             ?>
                 <div class="groupElement">
                     <img src="<?php echo $row["link"]; ?>" class="img-circle">
-                    <h1 class="groupname"><?php echo $row["name"]; ?></h1>
-                    <h2 class="membercount"><?php echo $row["mitgliederAnzahl"]; ?> Mitglieder</h2>
+                    <a href="index.php?seite=gruppenSeite&groupID=<?php echo $row["id"] ?>"><h1 class="groupname"><?php echo $row["name"]; ?></h1></a>
+                    <h3 class="membercount"><?php echo $row["mitgliederAnzahl"]; ?> Mitglieder</h3>
                 </div>
 
             <?php
