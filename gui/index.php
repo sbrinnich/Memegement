@@ -86,6 +86,7 @@ include_once "conf.php";
         case 'login': include_once "login.php";break;
         case 'registrieren': include_once "registrieren.php";break;
         case 'gruppeErstellen': include_once "gruppeErstellen.php";break;
+        case 'funObjekt': include_once "funObjekt.php";break;
         default: include_once "home.php";break;
     }
 
