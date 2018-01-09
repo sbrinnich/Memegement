@@ -3,7 +3,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_benutzerAnlegen]
   @benutzerName varchar(15),
-  @passwortHash  varchar(256),
+  @passwortHash  varchar(256)
 AS
 BEGIN TRY
 BEGIN TRANSACTION
