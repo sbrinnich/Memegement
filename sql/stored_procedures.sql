@@ -281,8 +281,8 @@ CREATE PROCEDURE [dbo].[usp_benutzerLoginCheck]
 GO
 
 
---beitrittsdatum, userbild, name,
-  CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
+--Gibt Benutzername, Beitrittsdatum, Profilbild-Link für einen bestimmten User zurück
+CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
       @id INT
   AS
     SELECT A.id, A.benutzerName, A.beitrittsDatum, B.link FROM
@@ -292,7 +292,95 @@ GO
 GO
 
 
---letzten x Beiträge, Videos, Bilder von bestimmten Troll
+-- zeige eine Bestimme Menge von Bildern/Videos/Witze von einem bestimmten Troll geordnet nach Datum
+CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
+    @id INT,
+    @offset INT,
+    @limit INT
+AS
+  SELECT
+    F.id, F.titel, F.durchschnittsBewertung, V.link
+  FROM Video V JOIN
+    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+      ON V.funObjektId = F.id
+  ORDER BY F.uploadDatum DESC
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
+GO
 
--- best bewertetsten -II-
+CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
+    @id INT,
+    @offset INT,
+    @limit INT
+AS
+  SELECT
+    F.id, F.titel, F.durchschnittsBewertung, B.link
+  FROM Bild B JOIN
+    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+      ON B.funObjektId = F.id
+  ORDER BY F.uploadDatum DESC
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
+    @id INT,
+    @offset INT,
+    @limit INT
+AS
+  SELECT
+    F.id, F.titel, F.durchschnittsBewertung, W.text
+  FROM Witz W JOIN
+    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+      ON W.funObjektId = F.id
+  ORDER BY F.uploadDatum DESC
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+
+GO
+
+-- zeige eine Bestimme Menge von Bildern/Videos/Witze von einem bestimmten Troll geordnet nach Bewertung
+
+CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
+    @id INT,
+    @offset INT,
+    @limit INT
+AS
+  SELECT
+    F.id, F.titel, F.durchschnittsBewertung, V.link
+  FROM Video V JOIN
+    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+      ON V.funObjektId = F.id
+  ORDER BY F.durchschnittsBewertung DESC
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
+    @id INT,
+    @offset INT,
+    @limit INT
+AS
+  SELECT
+    F.id, F.titel, F.durchschnittsBewertung, B.link
+  FROM Bild B JOIN
+    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+      ON B.funObjektId = F.id
+  ORDER BY F.durchschnittsBewertung DESC
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
+    @id INT,
+    @offset INT,
+    @limit INT
+AS
+  SELECT
+    F.id, F.titel, F.durchschnittsBewertung, W.text
+  FROM Witz W JOIN
+    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+      ON W.funObjektId = F.id
+  ORDER BY F.durchschnittsBewertung DESC
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+
+GO
