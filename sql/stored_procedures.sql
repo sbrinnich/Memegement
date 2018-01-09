@@ -388,9 +388,9 @@ DROP PROCEDURE IF EXISTS usp_benutzerProfilAnzeigen;
 GO
 
 
-CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
+ALTER PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
     @id             INT,
-    @benutzerName   VARCHAR(15) OUTPUT,
+    @benutzerName   TEXT OUTPUT,
     @beitrittsDatum DATE OUTPUT,
     @link           VARCHAR(256) OUTPUT
 AS
