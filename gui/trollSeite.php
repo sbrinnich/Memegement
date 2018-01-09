@@ -66,8 +66,8 @@
 
 
 
-                echo    "<img src=\"" + $Trolllink + "\">" +
-                        "<h1> " + $Trollname +" </h1>" +
+                echo    "<img src=\"". $Trolllink."\">" .
+                        "<h1> ".$Trollname." </h1>" .
                         "<h3> \" + $Trollbeitrittsdatum +\" </h3>";
                 ?>
             </div>
