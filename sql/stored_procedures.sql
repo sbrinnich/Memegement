@@ -1,7 +1,11 @@
 USE Memegement
 GO
 
-ALTER PROCEDURE [dbo].[usp_benutzerAnlegen]
+DROP PROCEDURE IF EXISTS usp_benutzerAnlegen;
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_benutzerAnlegen]
     @benutzerName varchar(15),
     @passwortHash varchar(256)
 AS
@@ -19,6 +23,10 @@ END CATCH
 GO
 
 
+DROP PROCEDURE IF EXISTS usp_benutzerIdSuchen;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerIdSuchen]
     @benutzerName varchar(15),
     @id int OUTPUT
@@ -26,6 +34,10 @@ AS
   SET NOCOUNT ON
   SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
 
+GO
+
+
+DROP PROCEDURE IF EXISTS usp_gruppeAnlegen;
 GO
 
 
@@ -47,6 +59,12 @@ AS
 
 GO
 
+
+
+DROP PROCEDURE IF EXISTS usp_gruppenBildAendern;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_gruppenBildAendern]
     @id          INT,
     @gruppenBild INT
@@ -64,6 +82,12 @@ AS
   END CATCH
 
 GO
+
+
+
+DROP PROCEDURE IF EXISTS usp_benutzerBildAendern;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_benutzerBildAendern]
     @benutzerId INT,
@@ -83,6 +107,12 @@ AS
 
 GO
 
+
+
+DROP PROCEDURE usp_gruppeBeitreten;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_gruppeBeitreten]
     @trollId   INT,
     @gruppenId INT
@@ -99,6 +129,12 @@ AS
   END CATCH
 
 GO
+
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektAnlegenVideo;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenVideo]
     @titel       VARCHAR(50),
@@ -123,6 +159,12 @@ AS
 
 GO
 
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektAnlegenBild;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenBild]
     @titel       VARCHAR(50),
     @erstellerId INT,
@@ -146,6 +188,12 @@ AS
 
 GO
 
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektAnlegenWitz;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenWitz]
     @title       VARCHAR(50),
     @erstellerId INT,
@@ -168,6 +216,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_funObjektBewerten;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektBewerten]
     @bewerterId       INT,
     @bewertungsObjekt INT,
@@ -185,6 +238,12 @@ AS
   END CATCH
 
 GO
+
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektKommentieren;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_funObjektKommentieren]
     @kommentiererId  INT,
@@ -204,6 +263,12 @@ AS
 
 GO
 
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektKommentareLaden;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
     @id INT,
     @verfasser VARCHAR(15) OUTPUT,
@@ -219,6 +284,12 @@ AS
   ORDER BY cast(erstellungsDatum AS DATETIME) ASC;
 
 GO
+
+
+
+DROP PROCEDURE IF EXISTS usp_bilderAnzeigen;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
   @offset INT,
@@ -240,6 +311,12 @@ AS
   ORDER BY F.id
   OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
+GO
+
+
+
+
+DROP PROCEDURE IF EXISTS usp_videosAnzeigen;
 GO
 
 
@@ -266,6 +343,11 @@ SELECT
 GO
 
 
+
+DROP PROCEDURE IF EXISTS usp_witzeAnzeigen;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
     @offset INT,
     @limit INT,
@@ -288,6 +370,11 @@ GO
 
 
 -- gibt zurück ob ein der angegebene User das Angegebene Passwort hat, 1 ist ja, alles andere ist nein
+
+DROP PROCEDURE IF EXISTS usp_benutzerLoginCheck;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerLoginCheck]
     @benutzerName VARCHAR(15),
     @passwortHash VARCHAR(256),
@@ -301,7 +388,12 @@ GO
 
 
 --Gibt Benutzername, Beitrittsdatum, Profilbild-Link für einen bestimmten User zurück
-Alter PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
+
+DROP PROCEDURE IF EXISTS usp_benutzerProfilAnzeigen;
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
       @id INT,
       @benutzerName VARCHAR(15) OUTPUT,
       @beitrittsDatum DATE  OUTPUT,
@@ -317,6 +409,11 @@ GO
 
 
 -- zeige eine Bestimme Menge von Bildern/Videos/Witze von einem bestimmten Troll geordnet nach Datum
+
+DROP PROCEDURE IF EXISTS usp_benutzerVideosAnzeigenNachDatum;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
   @id INT,
   @offset INT,
@@ -341,6 +438,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_benutzerBilderAnzeigenNachDatum;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
     @id INT,
     @offset INT,
@@ -364,6 +466,13 @@ AS
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
+
+
+
+
+DROP PROCEDURE IF EXISTS usp_benutzerWitzeAnzeigenNachDatum;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
     @id INT,
@@ -391,6 +500,10 @@ GO
 
 -- zeige eine Bestimme Menge von Bildern/Videos/Witze von einem bestimmten Troll geordnet nach Bewertung
 
+DROP PROCEDURE IF EXISTS usp_benutzerVideosAnzeigenNachBewertung;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
     @id INT,
     @offset INT,
@@ -415,6 +528,12 @@ AS
 
 GO
 
+
+
+DROP PROCEDURE IF EXISTS usp_benutzerBilderAnzeigenNachBewertung;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
     @id INT,
     @offset INT,
@@ -438,6 +557,13 @@ AS
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
+
+
+
+
+DROP PROCEDURE IF EXISTS usp_benutzerWitzeAnzeigenNachBewertung;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
     @id INT,
