@@ -6,6 +6,48 @@ if(!isset($_GET['id'])){
 }
 
 
+if(isset($_POST['kommentarText']) && $_POST['kommentarText'] != '' &&
+    isset($_SESSION['loginUsername']) && $_SESSION['loginUsername'] != ''){
+
+    $connectionInfo = array( "UID"=>$DB_USERNAME,
+        "PWD"=>$DB_PASSWORD,
+        "Database"=>$DB_NAME);
+
+    $conn = sqlsrv_connect($DB_HOST, $connectionInfo);
+
+    $benutzerId = 0;
+    $procedure_params = array(
+        array($_SESSION['loginUsername'], SQLSRV_PARAM_IN),
+        array(&$benutzerId, SQLSRV_PARAM_INOUT)
+    );
+    $sql = "EXEC usp_benutzerIdSuchen @benutzerName = ?, @id = ?";
+    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+    if(sqlsrv_execute($stmt)) {
+        sqlsrv_next_result($stmt);
+
+        $procedure_params = array(
+            array($benutzerId, SQLSRV_PARAM_IN),
+            array($_GET['id'], SQLSRV_PARAM_IN),
+            array($_POST['kommentarText'], SQLSRV_PARAM_IN)
+        );
+
+        sqlsrv_free_stmt($stmt);
+
+        $sql = "EXEC usp_funObjektKommentieren @kommentiererId = ?, @kommentarObjekt = ?, @text = ?";
+        $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+        if (sqlsrv_execute($stmt)) {
+            sqlsrv_next_result($stmt);
+            sqlsrv_free_stmt($stmt);
+        } else {
+            $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
+        }
+    }else{
+        $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Gruppe konnte nicht erstellt werden!';
+    }
+    sqlsrv_close($conn);
+}
 
 ?>
 
@@ -55,8 +97,8 @@ if(!isset($_GET['id'])){
         ?>
         <form method="post" action="index.php?seite=funObjekt&id=<?php echo $_GET['id']; ?>">
             <div class="row" id="funObjekt_writeKommentar">
-                <input type="text" placeholder="Kommentieren..." id="funObjekt_kommentarInputField"/>
-                <button>Senden</button> <!-- TODO Make button work -->
+                <input type="text" placeholder="Kommentieren..." id="funObjekt_kommentarInputField" name="kommentarText"/>
+                <button type="submit" class="btn btn-primary">Senden</button> <!-- TODO Make button work -->
             </div>
         </form>
         <?php
