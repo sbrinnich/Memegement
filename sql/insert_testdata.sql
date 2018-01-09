@@ -148,8 +148,7 @@ SET @Input = 8;
 WHILE @Input < 500001
   BEGIN
     Insert into Troll ( benutzerName , passwortHash, beitrittsDatum) values
-      ('Troll'+cast(@Input AS VARCHAR(10)), 'passwordforwinners', '2013-01-01');
-
+      ('Troll'+cast(@Input AS VARCHAR(10)), 'passwordforwinners', DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) );
     SET @Input = @Input + 1
 
   END
@@ -164,9 +163,9 @@ SET @Input = 12;
 WHILE @Input < 100001
   BEGIN
     Insert into FunObjekt (titel, uploadDatum, durchschnittsBewertung, erstellerId) values
-      ('Bild'+cast(@Input AS VARCHAR(10)) , '2018-01-08' , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1)
+      ('Bild'+cast(@Input AS VARCHAR(10)) , DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1);
     Insert into Bild (funObjektId, typ, link) values
-      (@Input , 'jpg' , 'http://www.bento.de/upload/images/imager/upload/images/713693/putinmeme5_2b2260db5b9416a958a6aca40e039b06.jpg')
+      (@Input , 'jpg' , 'http://www.bento.de/upload/images/imager/upload/images/713693/putinmeme5_2b2260db5b9416a958a6aca40e039b06.jpg');
     SET @Input = @Input + 1
   END
 GO
@@ -180,9 +179,9 @@ SET @Input = 100001
 WHILE @Input < 300001
   BEGIN
     INSERT INTO FunObjekt(titel, uploadDatum, durchschnittsBewertung, erstellerId)  VALUES
-      ('Video'+cast(@Input AS VARCHAR(10)) , '2018-12-20' , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1)
+      ('Video'+cast(@Input AS VARCHAR(10)) ,  DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1);
     INSERT INTO Video(funObjektId, dauer, link) VALUES
-      (@Input , '3:33' , 'https://youtu.be/dQw4w9WgXcQ')
+      (@Input , '3:33' , 'https://youtu.be/dQw4w9WgXcQ');
     SET @Input = @Input + 1
   END
 GO
@@ -196,9 +195,9 @@ SET @Input = 300001
 WHILE @Input < 500001
   BEGIN
     INSERT INTO FunObjekt(titel, uploadDatum, durchschnittsBewertung, erstellerId) VALUES
-      ('Witz'+cast(@Input AS VARCHAR(11)) , '2015-11-20' , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1)
+      ('Witz'+cast(@Input AS VARCHAR(11)) , DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1);
     INSERT INTO Witz(funObjektId, text) VALUES
-      (@Input , 'Ein Zwerg betritt eine Taverne und fragt:"Was ist blau und richt nach roter Farbe?" Der Barkeeper weiß es nicht und der Zwerg schreit: "Blaue Farbe!"')
+      (@Input , 'Ein Zwerg betritt eine Taverne und fragt:"Was ist blau und richt nach roter Farbe?" Der Barkeeper weiß es nicht und der Zwerg schreit: "Blaue Farbe!"');
     SET @Input = @Input + 1
   END
 GO
@@ -212,7 +211,7 @@ SET @Input = 1
 WHILE @Input < 1000001
   BEGIN
     INSERT INTO Kommentar(kommentiererID, kommentarObjekt, erstellungsDatum, text) VALUES
-      (cast(RAND()*500000 AS INT) + 1 , cast(RAND() * 500000 AS INT) + 1 , concat( cast((RAND() * 10 + 2007) AS VARCHAR(2), '-0', cast((RAND() * 9 + 1) AS VARCHAR(1)) , '-0', cast((RAND() * 9 + 1) AS VARCHAR(1)) )) , 'Das ist ja absolut geil!! Weiter so :D')
+      (cast(RAND()*500000 AS INT) + 1 , cast(RAND() * 500000 AS INT) + 1 ,  DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) , 'Das ist ja absolut geil!! Weiter so :D');
     SET @Input = @Input + 1
   END
 GO
@@ -228,9 +227,9 @@ WHILE @Input < 1001
   BEGIN
     SET @Gruender = CAST(RAND() * 500000 AS INT) + 1
     INSERT INTO Gruppe(name, beschreibung, gruendungsDatum, gruenderId, gruppenBild) VALUES
-      ('Gruppe'+cast(@Input AS VARCHAR(9)) , 'Beste Gruppe ever! NEIN WIR SIND DIE BESTEN! NEIN WIR!' , '2014-03-23' , @Gruender , 2)
+      ('Gruppe'+cast(@Input AS VARCHAR(9)) , 'Beste Gruppe ever! NEIN WIR SIND DIE BESTEN! NEIN WIR!' , '2014-03-23' , @Gruender , 2);
     INSERT INTO GruppenMitgliedschaft(trollId, gruppenId, beitrittsDatum) VALUES
-      ( @Gruender , @Input , '2000-01-01' )
+      ( @Gruender , @Input ,  DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) );
     SET @Input = @Input + 1
   END
 GO
@@ -248,9 +247,8 @@ WHILE @Input < 500000
     IF (NOT EXISTS(SELECT * FROM GruppenMitgliedschaft WHERE gruppenId = @Gruppe AND trollId = @Input))
       BEGIN
         INSERT INTO GruppenMitgliedschaft(trollId, gruppenId, beitrittsDatum) VALUES
-          (@Input , @Gruppe , '2014-08-20')
+          (@Input , @Gruppe ,  DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) );
       END
     SET @Input = @Input + 1
   END
 GO
-
