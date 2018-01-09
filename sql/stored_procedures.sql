@@ -108,7 +108,7 @@ AS
 GO
 
 
-DROP PROCEDURE usp_gruppeBeitreten;
+DROP PROCEDURE IF EXISTS usp_gruppeBeitreten;
 GO
 
 
@@ -638,14 +638,6 @@ CREATE PROCEDURE [dbo].[usp_bildInfosAnzeigen]
     @link VARCHAR(256) OUTPUT
   AS
   SELECT
-    @name = G.name,
-    @beschreibung = G.beschreibung,
-    @gruendungsDatum = G.gruendungsDatum,
-    @gruenderName = T.benutzerName,
-    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft where gruppenId = @id),
-    @gruppenBildLink = B.link
-  FROM Gruppe G JOIN Troll T
-      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId WHERE G.id = @id;
     @titel = F.titel,
     @erstellerName = T.benutzerName,
     @uploadDatum = F.uploadDatum,

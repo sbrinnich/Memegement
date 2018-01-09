@@ -3,7 +3,7 @@ USE Master;
 GO
 
 IF EXISTS(SELECT * FROM sysdatabases WHERE name = 'Memegement')
-  Drop database Memegement
+  Drop database Memegement;
 GO
 
 Create database Memegement;
