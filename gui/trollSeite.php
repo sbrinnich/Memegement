@@ -39,20 +39,23 @@
 
                 //Statisch
                 $Id = 1;
+                $Trollname = '';
 
                 $procedure_params = array(
                     array($Id, SQLSRV_PARAM_IN),
-                    array()
+                    array(&$Troll, SQLSRV_PARAM_INOUT)
                 );
-                $sql = "EXEC usp_benutzerAnlegen @benutzerName = ?, @passwortHash = ?";
+                $sql = "EXEC usp_benutzerProfilAnzeigen @id = ?,@benutzerName ";
                 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+
 
                 if(sqlsrv_execute($stmt)) {
                     sqlsrv_next_result($stmt);
+
                     sqlsrv_free_stmt($stmt);
 
-                    $_SESSION['loginUsername'] = $_POST['username'];
-                    header('Location: index.php?seite=home', true, 301);
+
                     sqlsrv_close($conn);
                     exit();
                 }else{
