@@ -9,7 +9,12 @@ if(isset($_SESSION['loginUsername'])){
 // Prüfen ob Username und Passwort eingegeben wurden und korrekt sind
 if(isset($_POST['username']) && isset($_POST['passwort'])){
     $hashedPasswort = hash('sha256', $_POST['passwort']);
+
     // TODO: Stored Procedure aufrufen zum checken
+
+
+
+
     $loginSuccess = true;
     if($loginSuccess){
         $_SESSION['loginUsername'] = $_POST['username'];
