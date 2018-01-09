@@ -591,7 +591,7 @@ GO
 
 -- gruppe nach ID - Alle daten, name, gründerinfo, gründungsdatum, mitgliederanzahl, gruppenbild,
 
-ALTER PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
+CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
   @id INT,
   @name VARCHAR(20) OUTPUT,
   @beschreibung VARCHAR(1024) OUTPUT,
@@ -614,5 +614,27 @@ GO
 
 
 -- ein Funobjekt zurückgeben, dass einen Typen hat, der Anzeigt was es is, -> Objekt, titel, ersteller, hochlade datum, durchschnittsbewertung
+
+CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
+    @id INT,
+    @name VARCHAR(20) OUTPUT,
+    @beschreibung VARCHAR(1024) OUTPUT,
+    @gruendungsDatum DATE OUTPUT,
+    @gruenderName VARCHAR(15) OUTPUT,
+    @mitgliederAnzahl INT OUTPUT,
+    @gruppenBildLink VARCHAR(256) OUTPUT
+AS
+  SELECT
+    @name = G.name,
+    @beschreibung = G.beschreibung,
+    @gruendungsDatum = G.gruendungsDatum,
+    @gruenderName = T.benutzerName,
+    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft group by gruppenId),
+    @gruppenBildLink = B.link
+  FROM (Select * FROM Gruppe WHERE id = @id) G JOIN Troll T
+      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId;
+
+GO
+
 
 -- stored procedure, die schaut ob ein troll ein besitzer einer Gruppe ist
