@@ -1,31 +1,45 @@
 USE Memegement
 GO
 
-ALTER PROCEDURE [dbo].[usp_benutzerAnlegen]
-    @benutzerName varchar(15),
-    @passwortHash varchar(256)
+DROP PROCEDURE IF EXISTS usp_benutzerAnlegen;
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_benutzerAnlegen]
+    @benutzerName VARCHAR(15),
+    @passwortHash VARCHAR(256)
 AS
-BEGIN TRY
-BEGIN TRANSACTION
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-INSERT INTO dbo.Troll (benutzerName,passwortHash,beitrittsDatum) VALUES
-  (@benutzerName,@passwortHash,GETDATE())
-COMMIT TRANSACTION
-END TRY
-BEGIN CATCH
-ROLLBACK TRANSACTION
-END CATCH
+  BEGIN TRY
+  BEGIN TRANSACTION
+  SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+  INSERT INTO dbo.Troll (benutzerName, passwortHash, beitrittsDatum) VALUES
+    (@benutzerName, @passwortHash, GETDATE())
+  COMMIT TRANSACTION
+  END TRY
+  BEGIN CATCH
+  ROLLBACK TRANSACTION
+  END CATCH
 
 GO
 
 
+DROP PROCEDURE IF EXISTS usp_benutzerIdSuchen;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerIdSuchen]
-    @benutzerName varchar(15),
-    @id int OUTPUT
+    @benutzerName VARCHAR(15),
+    @id           INT OUTPUT
 AS
   SET NOCOUNT ON
-  SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
+  SELECT @id = id
+  FROM Troll
+  WHERE benutzerName = @benutzerName
 
+GO
+
+
+DROP PROCEDURE IF EXISTS usp_gruppeAnlegen;
 GO
 
 
@@ -47,6 +61,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_gruppenBildAendern;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_gruppenBildAendern]
     @id          INT,
     @gruppenBild INT
@@ -64,6 +83,11 @@ AS
   END CATCH
 
 GO
+
+
+DROP PROCEDURE IF EXISTS usp_benutzerBildAendern;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_benutzerBildAendern]
     @benutzerId INT,
@@ -83,6 +107,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE usp_gruppeBeitreten;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_gruppeBeitreten]
     @trollId   INT,
     @gruppenId INT
@@ -99,6 +128,11 @@ AS
   END CATCH
 
 GO
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektAnlegenVideo;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenVideo]
     @titel       VARCHAR(50),
@@ -123,6 +157,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_funObjektAnlegenBild;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenBild]
     @titel       VARCHAR(50),
     @erstellerId INT,
@@ -146,6 +185,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_funObjektAnlegenWitz;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektAnlegenWitz]
     @title       VARCHAR(50),
     @erstellerId INT,
@@ -168,6 +212,11 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_funObjektBewerten;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektBewerten]
     @bewerterId       INT,
     @bewertungsObjekt INT,
@@ -185,6 +234,11 @@ AS
   END CATCH
 
 GO
+
+
+DROP PROCEDURE IF EXISTS usp_funObjektKommentieren;
+GO
+
 
 CREATE PROCEDURE [dbo].[usp_funObjektKommentieren]
     @kommentiererId  INT,
@@ -204,30 +258,41 @@ AS
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_funObjektKommentareLaden;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
-    @id INT,
-    @verfasser VARCHAR(15) OUTPUT,
-    @text VARCHAR(256) OUTPUT,
+    @id               INT,
+    @verfasser        VARCHAR(15) OUTPUT,
+    @text             VARCHAR(256) OUTPUT,
     @erstellungsDatum DATE OUTPUT
 AS
   SELECT
     @verfasser = T.benutzerName,
     @text = K.text,
     @erstellungsDatum = K.erstellungsDatum
-  FROM Kommentar K JOIN Troll T ON K.kommentiererID = T.id
+  FROM Kommentar K
+    JOIN Troll T ON K.kommentiererID = T.id
   WHERE kommentarObjekt = @id
   ORDER BY cast(erstellungsDatum AS DATETIME) ASC;
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_bilderAnzeigen;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
-  @offset INT,
-  @limit INT,
-  @id INT OUTPUT,
-  @titel VARCHAR(50) OUTPUT,
-  @durchschnittsBewertung FLOAT OUTPUT,
-  @typ VARCHAR(10) OUTPUT,
-  @link VARCHAR(256) OUTPUT
+    @offset                 INT,
+    @limit                  INT,
+    @id                     INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @typ                    VARCHAR(10) OUTPUT,
+    @link                   VARCHAR(256) OUTPUT
 AS
 
   SELECT
@@ -236,43 +301,53 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @typ = B.typ,
     @link = B.link
-  FROM Bild B JOIN FunObjekt F ON B.funObjektId = F.id
-  ORDER BY F.id
-  OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
-
-GO
-
-
-CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
-  @offset INT,
-  @limit INT,
-  @id INT OUTPUT,
-  @titel VARCHAR(50) OUTPUT,
-  @durchschnittsBewertung FLOAT OUTPUT,
-  @dauer VARCHAR(10) OUTPUT,
-  @link VARCHAR(256) OUTPUT
-AS
-
-SELECT
-  @id = F.id,
-  @titel = F.titel,
-  @durchschnittsBewertung = F.durchschnittsBewertung,
-  @dauer = V.dauer,
-  @link = V.link
-  FROM Video V JOIN FunObjekt F ON V.funObjektId = F.id
+  FROM Bild B
+    JOIN FunObjekt F ON B.funObjektId = F.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
 
-CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
-    @offset INT,
-    @limit INT,
-    @id INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+DROP PROCEDURE IF EXISTS usp_videosAnzeigen;
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
+    @offset                 INT,
+    @limit                  INT,
+    @id                     INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @text VARCHAR(1024) OUTPUT
+    @dauer                  VARCHAR(10) OUTPUT,
+    @link                   VARCHAR(256) OUTPUT
+AS
+
+  SELECT
+    @id = F.id,
+    @titel = F.titel,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @dauer = V.dauer,
+    @link = V.link
+  FROM Video V
+    JOIN FunObjekt F ON V.funObjektId = F.id
+  ORDER BY F.id
+    OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
+
+GO
+
+
+DROP PROCEDURE IF EXISTS usp_witzeAnzeigen;
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
+    @offset                 INT,
+    @limit                  INT,
+    @id                     INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @text                   VARCHAR(1024) OUTPUT
 AS
 
   SELECT
@@ -280,7 +355,8 @@ AS
     @titel = F.titel,
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @text = W.text
-  FROM Witz W JOIN FunObjekt F ON W.funObjektId = F.id
+  FROM Witz W
+    JOIN FunObjekt F ON W.funObjektId = F.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
@@ -288,44 +364,64 @@ GO
 
 
 -- gibt zurück ob ein der angegebene User das Angegebene Passwort hat, 1 ist ja, alles andere ist nein
+
+DROP PROCEDURE IF EXISTS usp_benutzerLoginCheck;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerLoginCheck]
-    @benutzerName VARCHAR(15),
-    @passwortHash VARCHAR(256),
+    @benutzerName   VARCHAR(15),
+    @passwortHash   VARCHAR(256),
     @benutzerAnzahl INT OUTPUT
-  AS
-    SELECT @benutzerAnzahl = COUNT(*) FROM Troll
-        WHERE benutzerName = @benutzerName AND
-          passwortHash = @passwortHash;
+AS
+  SELECT @benutzerAnzahl = COUNT(*)
+  FROM Troll
+  WHERE benutzerName = @benutzerName AND
+        passwortHash = @passwortHash;
 
 GO
 
 
 --Gibt Benutzername, Beitrittsdatum, Profilbild-Link für einen bestimmten User zurück
+
+DROP PROCEDURE IF EXISTS usp_benutzerProfilAnzeigen;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
-      @id INT,
-      @benutzerName VARCHAR(15) OUTPUT,
-      @beitrittsDatum DATE  OUTPUT,
-      @link VARCHAR(256) OUTPUT
-  AS
-    SELECT @benutzerName=A.benutzerName,
-      @beitrittsDatum=A.beitrittsDatum,
-      @beitrittsDatum=B.link FROM
-      (SELECT * FROM Troll WHERE id = @id) A
-      JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
+    @id             INT,
+    @benutzerName   VARCHAR(15) OUTPUT,
+    @beitrittsDatum DATE OUTPUT,
+    @link           VARCHAR(256) OUTPUT
+AS
+  SELECT
+    @benutzerName = A.benutzerName,
+    @beitrittsDatum = A.beitrittsDatum,
+    @link = B.link
+  FROM
+    (SELECT *
+     FROM Troll
+     WHERE id = @id) A
+    JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
 
 GO
 
 
 -- zeige eine Bestimme Menge von Bildern/Videos/Witze von einem bestimmten Troll geordnet nach Datum
+
+DROP PROCEDURE IF EXISTS usp_benutzerVideosAnzeigenNachDatum;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
-  @id INT,
-  @offset INT,
-  @limit INT,
-  @id2 INT OUTPUT,
-  @titel VARCHAR(50) OUTPUT,
-  @durchschnittsBewertung FLOAT OUTPUT,
-  @link VARCHAR(256) OUTPUT,
-  @datum DATE OUTPUT
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -333,23 +429,31 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = V.link,
     @datum = F.uploadDatum
-  FROM Video V JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Video V
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON V.funObjektId = F.id
   ORDER BY F.uploadDatum DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_benutzerBilderAnzeigenNachDatum;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -357,23 +461,31 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = B.link,
     @datum = F.uploadDatum
-  FROM Bild B JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Bild B
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON B.funObjektId = F.id
   ORDER BY F.uploadDatum DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_benutzerWitzeAnzeigenNachDatum;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @text VARCHAR(1024) OUTPUT,
-    @datum DATE OUTPUT
+    @text                   VARCHAR(1024) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -381,8 +493,11 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @text = W.text,
     @datum = F.uploadDatum
-  FROM Witz W JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Witz W
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON W.funObjektId = F.id
   ORDER BY F.uploadDatum DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -391,15 +506,19 @@ GO
 
 -- zeige eine Bestimme Menge von Bildern/Videos/Witze von einem bestimmten Troll geordnet nach Bewertung
 
+DROP PROCEDURE IF EXISTS usp_benutzerVideosAnzeigenNachBewertung;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT,
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -407,23 +526,31 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = V.link,
     @datum = F.uploadDatum
-  FROM Video V JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Video V
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON V.funObjektId = F.id
   ORDER BY F.durchschnittsBewertung DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_benutzerBilderAnzeigenNachBewertung;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT
+    @link                   VARCHAR(256) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
@@ -431,32 +558,43 @@ AS
     @durchschnittsBewertung = F.durchschnittsBewertung,
     @link = B.link,
     @datum = F.uploadDatum
-  FROM Bild B JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Bild B
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON B.funObjektId = F.id
   ORDER BY F.durchschnittsBewertung DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
 GO
 
+
+DROP PROCEDURE IF EXISTS usp_benutzerWitzeAnzeigenNachBewertung;
+GO
+
+
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
-    @id INT,
-    @offset INT,
-    @limit INT,
-    @id2 INT OUTPUT,
-    @titel VARCHAR(50) OUTPUT,
+    @id                     INT,
+    @offset                 INT,
+    @limit                  INT,
+    @id2                    INT OUTPUT,
+    @titel                  VARCHAR(50) OUTPUT,
     @durchschnittsBewertung FLOAT OUTPUT,
-    @link VARCHAR(256) OUTPUT,
-    @datum DATE OUTPUT
+    @text                   VARCHAR(1024) OUTPUT,
+    @datum                  DATE OUTPUT
 AS
   SELECT
     @id2 = F.id,
     @titel = F.titel,
     @durchschnittsBewertung = F.durchschnittsBewertung,
-    @link = W.link,
+    @text = W.text,
     @datum = F.uploadDatum
-  FROM Witz W JOIN
-    (SELECT * FROM FunObjekt WHERE erstellerId = @id) F
+  FROM Witz W
+    JOIN
+    (SELECT *
+     FROM FunObjekt
+     WHERE erstellerId = @id) F
       ON W.funObjektId = F.id
   ORDER BY F.durchschnittsBewertung DESC
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
@@ -465,6 +603,150 @@ GO
 
 -- gruppe nach ID - Alle daten, name, gründerinfo, gründungsdatum, mitgliederanzahl, gruppenbild,
 
--- ein Funobjekt zurückgeben, dass einen Typen hat, der Anzeigt was es is, -> Objekt, titel, ersteller, hochlade datum, durchschnittsbewertung
+DROP PROCEDURE IF EXISTS usp_gruppenDatenAnzeigen;
+
+CREATE PROCEDURE [dbo].[usp_gruppenDatenAnzeigen]
+  @id INT,
+  @name VARCHAR(20) OUTPUT,
+  @beschreibung VARCHAR(1024) OUTPUT,
+  @gruendungsDatum DATE OUTPUT,
+  @gruenderName VARCHAR(15) OUTPUT,
+  @mitgliederAnzahl INT OUTPUT,
+  @gruppenBildLink VARCHAR(256) OUTPUT
+AS
+  SELECT
+    @name = G.name,
+    @beschreibung = G.beschreibung,
+    @gruendungsDatum = G.gruendungsDatum,
+    @gruenderName = T.benutzerName,
+    @mitgliederAnzahl = (select count(*) as 'mitgliederAnzahl' from GruppenMitgliedschaft group by gruppenId),
+    @gruppenBildLink = B.link
+  FROM (Select * FROM Gruppe WHERE id = @id) G JOIN Troll T
+      ON G.gruenderId = T.id LEFT JOIN Bild B ON G.gruppenBild = B.funObjektId;
+
+GO
+
+
+CREATE PROCEDURE [dbo].[usp_bildInfosAnzeigen]
+    @id INT,
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link VARCHAR(256) OUTPUT
+  AS
+  SELECT
+    @titel = F.titel,
+    @erstellerName = T.benutzerName,
+    @uploadDatum = F.uploadDatum,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @link = B.link
+  FROM (SELECT * FROM Bild WHERE funObjektId = @id) B
+    JOIN FunObjekt F ON B.funObjektId = F.id JOIN Troll T ON F.erstellerId = T.id
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_videoInfosAnzeigen]
+    @id INT,
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link VARCHAR(256) OUTPUT
+AS
+  SELECT
+    @titel = F.titel,
+    @erstellerName = T.benutzerName,
+    @uploadDatum = F.uploadDatum,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @link = V.link
+  FROM (SELECT * FROM Video WHERE funObjektId = @id) V
+    JOIN FunObjekt F ON V.funObjektId = F.id JOIN Troll T ON F.erstellerId = T.id
+
+GO
+
+CREATE PROCEDURE [dbo].[usp_witzInfosAnzeigen]
+    @id INT,
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @text VARCHAR(1024) OUTPUT
+AS
+  SELECT
+    @titel = F.titel,
+    @erstellerName = T.benutzerName,
+    @uploadDatum = F.uploadDatum,
+    @durchschnittsBewertung = F.durchschnittsBewertung,
+    @text = W.text
+  FROM (SELECT * FROM Witz WHERE funObjektId = @id) W
+    JOIN FunObjekt F ON W.funObjektId = F.id JOIN Troll T ON F.erstellerId = T.id
+
+GO
+
+
+-- Das angeforderte Funobjekt mit Typen, Titel, Erstellernamen, uploadDatum, durchschnittsbewertung
+
+CREATE PROCEDURE [dbo].[usp_funObjektAnzeigen]
+    @id INT,
+    @typ VARCHAR(1) OUTPUT, -- gibt an ob Bild (B), Video (V), oder Witz (W)
+    @titel VARCHAR(50) OUTPUT,
+    @erstellerName VARCHAR(15) OUTPUT,
+    @uploadDatum DATE OUTPUT,
+    @durchschnittsBewertung FLOAT OUTPUT,
+    @link VARCHAR(256) OUTPUT,
+    @text VARCHAR(1024) OUTPUT
+AS
+  DECLARE @count INT = 0;
+
+  SELECT @count = COUNT(*) FROM Bild WHERE funObjektId = @id;
+  IF(@count = 1)
+      BEGIN
+        EXEC usp_bildInfosAnzeigen @id, @titel OUTPUT ,
+                                   @erstellerName OUTPUT,
+                                   @uploadDatum OUTPUT,
+                                   @durchschnittsBewertung OUTPUT,
+                                   @link OUTPUT ;
+        SET @text = 'Dies ist ein Bild';
+        SET @typ = 'B';
+        RETURN
+      END
+  ELSE
+  BEGIN
+    SELECT @count = COUNT(*) FROM Video WHERE funObjektId = @id;
+    IF (@count = 1)
+      BEGIN
+        EXEC usp_videoInfosAnzeigen @id, @titel OUTPUT ,
+                                   @erstellerName OUTPUT,
+                                   @uploadDatum OUTPUT,
+                                   @durchschnittsBewertung OUTPUT,
+                                   @link OUTPUT ;
+        SET @text = 'Dies ist ein Video';
+        SET @typ = 'V';
+        RETURN
+      END
+    ELSE
+      BEGIN
+        SELECT @count = COUNT(*) FROM Witz WHERE funObjektId = @id;
+        IF (@count = 1)
+          BEGIN
+            EXEC usp_witzInfosAnzeigen @id, @titel OUTPUT ,
+                                       @erstellerName OUTPUT,
+                                       @uploadDatum OUTPUT,
+                                       @durchschnittsBewertung OUTPUT,
+                                       @text OUTPUT ;
+            SET @link = NULL;
+            SET @typ = 'W';
+          END
+        ELSE -- nothing :(
+          BEGIN
+            RETURN
+          END
+      END
+  END
+
+
+GO
+
 
 -- stored procedure, die schaut ob ein troll ein besitzer einer Gruppe ist
