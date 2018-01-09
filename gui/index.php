@@ -2,8 +2,6 @@
 
 session_start();
 
-phpinfo();
-
 if(!isset($_SESSION['currentPage'])){
     $_SESSION['currentPage'] = 'home';
 }

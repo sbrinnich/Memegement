@@ -26,6 +26,7 @@ AS
   SET NOCOUNT ON
   SELECT @id = id FROM Troll WHERE benutzerName = @benutzerName
   RETURN
+
 GO
 
 
