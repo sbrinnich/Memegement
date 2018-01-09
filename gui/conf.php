@@ -2,5 +2,6 @@
 
 $DB_NAME = 'Memegement';
 $DB_HOST = 'localhost';
-$DB_USERNAME = 'Rodex';
-$DB_PASSWORD = 'Alex1990';
+
+$DB_USERNAME = 'testyuser';
+$DB_PASSWORD = 'Testy123';
