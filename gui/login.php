@@ -14,7 +14,6 @@ if(isset($_POST['username']) && isset($_POST['passwort'])){
 
 
 
-
     $loginSuccess = false;
     if($loginSuccess){
         $_SESSION['loginUsername'] = $_POST['username'];
