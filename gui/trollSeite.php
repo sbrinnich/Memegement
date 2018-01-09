@@ -31,6 +31,37 @@
             <div class="col-md-4">
                 <?php
 
+                $connectionInfo = array( "UID"=>$DB_USERNAME,
+                    "PWD"=>$DB_PASSWORD,
+                    "Database"=>$DB_NAME);
+
+                $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
+
+                //Statisch
+                $Id = 1;
+
+                $procedure_params = array(
+                    array($Id, SQLSRV_PARAM_IN),
+                    array()
+                );
+                $sql = "EXEC usp_benutzerAnlegen @benutzerName = ?, @passwortHash = ?";
+                $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+                if(sqlsrv_execute($stmt)) {
+                    sqlsrv_next_result($stmt);
+                    sqlsrv_free_stmt($stmt);
+
+                    $_SESSION['loginUsername'] = $_POST['username'];
+                    header('Location: index.php?seite=home', true, 301);
+                    sqlsrv_close($conn);
+                    exit();
+                }else{
+                    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
+                }
+                sqlsrv_close($conn);
+
+
+
                 echo "<h1> " + $_SESSION['loginUsername'] +" </h1>"
                     ;
                 ?>

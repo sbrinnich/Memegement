@@ -9,7 +9,7 @@ BEGIN TRY
 BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 INSERT INTO dbo.Troll(benutzerName,passwortHash,beitrittsDatum) values
-  ( @benutzerName,@passwortHash, GETDATE())
+  ( @benutzerName,@passwortHash,GETDATE())
 COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
