@@ -1,3 +1,14 @@
+<?php
+
+if(!isset($_GET['id'])){
+    header('Location: index.php?seite=home', true, 301);
+    exit();
+}
+
+
+
+?>
+
 <!-- DETAILS -->
 <div class="row">
     <div class="col-md-7">
@@ -16,13 +27,19 @@
             <span class="glyphicon glyphicon-star"></span>
             <span class="glyphicon glyphicon-star-empty"></span>
         </div>
-        <div class="row center_align">
-            <button id="funObjekt_buttonBewerten">Bewerten</button> <!-- TODO Nur anzeigen wenn eingeloggt -->
-        </div>
-        <div class="row center_align">
-            <!-- TODO Make button work -->
-            <button id="funObjekt_buttonProfilbild">Als Profilbild setzen</button> <!-- TODO Nur anzeigen wenn eingeloggt -->
-        </div>
+        <?php
+            if(isset($_SESSION['loginUsername']) && $_SESSION['loginUsername'] != '') {
+                ?>
+                <div class="row center_align">
+                    <button id="funObjekt_buttonBewerten">Bewerten</button>
+                </div>
+                <div class="row center_align">
+                    <!-- TODO Make button work -->
+                    <button id="funObjekt_buttonProfilbild">Als Profilbild setzen</button>
+                </div>
+                <?php
+            }
+        ?>
         <div class="row center_align">
             <!-- TODO Make button work -->
             <button id="funObjekt_buttonGruppenbild">Als Gruppenbild setzen</button> <!-- TODO Nur anzeigen wenn Besitzer einer Gruppe -->
@@ -33,10 +50,18 @@
 
 <!-- KOMMENTARE -->
 <div class="row" id="funObjekt_kommentarHeadline">Kommentare</div>
-<div class="row" id="funObjekt_writeKommentar">
-    <input type="text" placeholder="Kommentieren..." id="funObjekt_kommentarInputField" />
-    <button>Senden</button> <!-- TODO Make button work -->
-</div>
+<?php
+    if(isset($_SESSION['loginUsername']) && $_SESSION['loginUsername'] != '') {
+        ?>
+        <form method="post" action="index.php?seite=funObjekt&id=<?php echo $_GET['id']; ?>">
+            <div class="row" id="funObjekt_writeKommentar">
+                <input type="text" placeholder="Kommentieren..." id="funObjekt_kommentarInputField"/>
+                <button>Senden</button> <!-- TODO Make button work -->
+            </div>
+        </form>
+        <?php
+    }
+?>
 
 <!-- TODO Alle verfügbaren Kommentare in diesem Format anzeigen -->
 <div class="row kommentar">
