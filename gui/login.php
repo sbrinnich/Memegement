@@ -12,9 +12,8 @@ if(isset($_POST['username']) && isset($_POST['passwort'])){
 
     // TODO: Stored Procedure aufrufen zum checken
 
-
-
-    $loginSuccess = false;
+    $loginSuccess = true;
+	
     if($loginSuccess){
         $_SESSION['loginUsername'] = $_POST['username'];
     }else{
