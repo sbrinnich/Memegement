@@ -10,17 +10,44 @@ if(isset($_SESSION['loginUsername'])){
 if(isset($_POST['username']) && isset($_POST['passwort'])){
     $hashedPasswort = hash('sha256', $_POST['passwort']);
 
-    // TODO: Stored Procedure aufrufen zum checken
+    $connectionInfo = array( "UID"=>$DB_USERNAME,
+        "PWD"=>$DB_PASSWORD,
+        "Database"=>$DB_NAME);
 
+    $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
+    $hashedPasswort = hash('sha256', $_POST['passwort']);
+    $returnValue = 0;
 
+    $procedure_params = array(
+        array($_POST['username'], SQLSRV_PARAM_IN),
+        array($hashedPasswort, SQLSRV_PARAM_IN),
+        array(&$returnValue, SQLSRV_PARAM_INOUT)
+    );
+    $sql = "EXEC usp_benutzerLoginCheck @benutzerName = ?, @passwortHash = ?, @benutzerAnzahl = ?";
+    $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
-    $loginSuccess = true;
-    if($loginSuccess){
-        $_SESSION['loginUsername'] = $_POST['username'];
+    if(sqlsrv_execute($stmt)) {
+        sqlsrv_next_result($stmt);
+
+        if($returnValue == 1){
+            $_SESSION['loginUsername'] = $_POST['username'];
+        }else{
+            $_SESSION['status'] = 'Login fehlgeschlagen! Bitte prüfe deine Eingaben und versuche es erneut!';
+        }
+
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+
+        if($returnValue == 1) {
+            header('Location: index.php?seite=home', true, 301);
+            exit();
+        }
     }else{
-        $_SESSION['status'] = 'Login fehlgeschlagen! Bitte prüfe deine Eingaben und versuche es erneut!';
+        $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Eingaben konnten nicht überprüft werden!';
+        sqlsrv_close($conn);
     }
+
 }
 ?>
 

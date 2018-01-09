@@ -49,7 +49,7 @@ AS
   DECLARE @benutzerName VARCHAR(15) = (Select benutzerName FROM inserted);
   DECLARE @passwortHash VARCHAR(256) = (Select passwortHash FROM inserted);
 
-  IF(ltrim(rtrim(isNull(@benutzerName,''))) = '' OR @passwortHash < 64)
+  IF(ltrim(rtrim(isNull(@benutzerName,''))) = '' OR len(@passwortHash) < 64)
       BEGIN
         RAISERROR ('Benutzername oder Passwort zu kurz', 10,1);
         ROLLBACK
