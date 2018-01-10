@@ -31,24 +31,30 @@ if(sqlsrv_execute($stmt)) {
 
 $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
-//Statisch
-
-$Trollname = '';
-$Trollbeitrittsdatum = '';
-$Trolllink = '';
-
 $procedure_params = array(
-    array($id, SQLSRV_PARAM_IN),
-    array(&$Trollname, SQLSRV_PARAM_INOUT),
-    array(&$Trollbeitrittsdatum, SQLSRV_PARAM_INOUT),
-    array(&$Trolllink, SQLSRV_PARAM_INOUT)
+    array($id, SQLSRV_PARAM_IN)
 );
 
-$sql = "EXEC usp_benutzerProfilAnzeigen @id = ?,@benutzerName = ?,@beitrittsDatum = ?, @link = ? ";
+$sql = "EXEC usp_benutzerProfilAnzeigen @id = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
 if(sqlsrv_execute($stmt)) {
-    sqlsrv_next_result($stmt);
+    do{
+        while($row = sqlsrv_fetch_array($stmt)){
+            ?>
+
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <?php
+                    echo '<img class="img-group" src="'.$row['link'].'" /><h1>'.$row['benutzerName'].'</h1><h3>'.$row['beitrittsDatum']->format('Y-m-d').'</h3>';
+                    ?>
+                </div>
+            </div>
+
+            <?php
+        }
+    }while(sqlsrv_next_result($stmt));
     sqlsrv_free_stmt($stmt);
 
 
@@ -60,37 +66,20 @@ if(sqlsrv_execute($stmt)) {
 
 ?>
 
-<html>
-<head>
-    <title>Memegement</title>
+<?php
+$conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
+$procedure_params = array(
+array($id, SQLSRV_PARAM_IN)
+);
 
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css"
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet"
-          href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="style.css" />
+$sql = "EXEC usp_benutzerProfilAnzeigen @id = ?";
+$stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-<!-- CONTENT -->
-
-
-    <div class="row">
-        <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <?php
-                    echo '<img src="'.$Trolllink.'" /><h1>'.$Trollname.'</h1><h1>'.$id.'</h1><h3>'.$Trollbeitrittsdatum.'</h3>';
-                ?>
-            </div>
-        </div>
+if(sqlsrv_execute($stmt)) {
+do{
+while($row = sqlsrv_fetch_array($stmt)){
+?>
 
 
     <div class="row">
@@ -144,7 +133,16 @@ if(sqlsrv_execute($stmt)) {
         </div>
     </div>
 
-<!-- END CONTENT -->
-</body>
-</html>
+    <?php
+}
+}while(sqlsrv_next_result($stmt));
+    sqlsrv_free_stmt($stmt);
 
+
+    sqlsrv_close($conn);
+}else{
+    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
+    sqlsrv_close($conn);
+}
+
+?>

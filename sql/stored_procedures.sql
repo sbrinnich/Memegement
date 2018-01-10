@@ -284,12 +284,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @typ                    VARCHAR(10),
-    @link                   VARCHAR(256)
+    @limit                  INT
 AS
 
   SELECT
@@ -313,12 +308,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @dauer                  VARCHAR(10),
-    @link                   VARCHAR(256)
+    @limit                  INT
 AS
 
   SELECT
@@ -342,11 +332,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024)
+    @limit                  INT
 AS
 
   SELECT
@@ -389,20 +375,17 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
-    @id             INT,
-    @benutzerName   VARCHAR(15) OUTPUT,
-    @beitrittsDatum DATE OUTPUT,
-    @link           VARCHAR(256) OUTPUT
+    @id             INT
 AS
   SELECT
-    @benutzerName = A.benutzerName,
-    @beitrittsDatum = A.beitrittsDatum,
-    @link = B.link
+      A.benutzerName,
+      A.beitrittsDatum,
+      B.link
   FROM
     (SELECT *
      FROM Troll
      WHERE id = @id) A
-    JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
+    LEFT JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
 
 GO
 
@@ -416,12 +399,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -448,12 +426,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -480,12 +453,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -513,12 +481,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -545,12 +508,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -577,12 +535,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
