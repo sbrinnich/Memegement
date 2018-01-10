@@ -303,6 +303,7 @@ AS
     B.link
   FROM Bild B
     JOIN FunObjekt F ON B.funObjektId = F.id
+    JOIN Troll T ON F.erstellerId = T.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
@@ -331,6 +332,7 @@ AS
     V.link
   FROM Video V
     JOIN FunObjekt F ON V.funObjektId = F.id
+    JOIN Troll T ON F.erstellerId = T.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
@@ -354,9 +356,10 @@ AS
     F.id,
     F.titel,
     F.durchschnittsBewertung,
-    @text = W.text
+    W.text
   FROM Witz W
     JOIN FunObjekt F ON W.funObjektId = F.id
+    JOIN Troll T ON F.erstellerId = T.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 

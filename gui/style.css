@@ -24,6 +24,7 @@ body {
 #index_login {
     font-size: 18px;
     font-weight: bold;
+    color: lightgray;
 }
 
 /* INDEX */
@@ -217,4 +218,12 @@ body {
 .objekte_image {
     width: 80%;
     height: 100%;
+}
+
+.funObjekt_container {
+    margin-top: 30px;
+}
+
+.objekte_witz {
+    font-size: 20px;
 }
