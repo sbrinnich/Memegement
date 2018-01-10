@@ -52,7 +52,6 @@ include_once "conf.php";
                 <li <?php if($_SESSION['currentPage'] == 'bilder') echo 'class="active"'; ?>><a href="?seite=bilder">Bilder</a></li>
                 <li <?php if($_SESSION['currentPage'] == 'videos') echo 'class="active"'; ?>><a href="?seite=videos">Videos</a></li>
                 <li <?php if($_SESSION['currentPage'] == 'witze') echo 'class="active"'; ?>><a href="?seite=witze">Witze</a></li>
-                <li <?php if($_SESSION['currentPage'] == 'troll') echo 'class="active"'; ?>><a href="?seite=troll">Troll</a></li>
                 <li <?php if($_SESSION['currentPage'] == 'gruppen') echo 'class="active"'; ?>><a href="?seite=gruppen">Gruppen</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

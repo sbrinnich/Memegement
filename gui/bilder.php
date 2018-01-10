@@ -47,8 +47,7 @@ if(sqlsrv_execute($stmt)) {
 
     sqlsrv_free_stmt($stmt);
 }else{
-    echo print_r(sqlsrv_errors(), true);
-    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
+    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Bilder konnten nicht geladen werden!';
 }
 sqlsrv_close($conn);
 
