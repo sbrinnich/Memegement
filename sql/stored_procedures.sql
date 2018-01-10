@@ -292,7 +292,9 @@ AS
     F.titel,
     F.durchschnittsBewertung,
     B.typ,
-    B.link
+    B.link,
+    T.benutzerName,
+    F.uploadDatum
   FROM Bild B
     JOIN FunObjekt F ON B.funObjektId = F.id
     JOIN Troll T ON F.erstellerId = T.id
@@ -316,7 +318,9 @@ AS
     F.titel,
     F.durchschnittsBewertung,
     V.dauer,
-    V.link
+    V.link,
+    T.benutzerName,
+    F.uploadDatum
   FROM Video V
     JOIN FunObjekt F ON V.funObjektId = F.id
     JOIN Troll T ON F.erstellerId = T.id
@@ -339,7 +343,9 @@ AS
     F.id,
     F.titel,
     F.durchschnittsBewertung,
-    W.text
+    W.text,
+    T.benutzerName,
+    F.uploadDatum
   FROM Witz W
     JOIN FunObjekt F ON W.funObjektId = F.id
     JOIN Troll T ON F.erstellerId = T.id
