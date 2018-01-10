@@ -41,33 +41,89 @@ if(isset($_POST['kommentarText']) && $_POST['kommentarText'] != '' &&
             sqlsrv_next_result($stmt);
             sqlsrv_free_stmt($stmt);
         } else {
-            $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
+            $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Kommentar konnte nicht erstellt werden!';
         }
     }else{
-        $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Gruppe konnte nicht erstellt werden!';
+        $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Kommentar konnte nicht erstellt werden!';
     }
     sqlsrv_close($conn);
 }
+
+
+$connectionInfo = array( "UID"=>$DB_USERNAME,
+    "PWD"=>$DB_PASSWORD,
+    "Database"=>$DB_NAME);
+
+$conn = sqlsrv_connect($DB_HOST, $connectionInfo);
+
+$typ = '';
+$titel = '';
+$erstellerName = '';
+$uploadDatum = '';
+$durchschnittsBewertung = 0.0;
+$link = '';
+$text = '';
+
+$procedure_params = array(
+    array($_GET['id'], SQLSRV_PARAM_IN),
+    array(&$typ, SQLSRV_PARAM_INOUT),
+    array(&$titel, SQLSRV_PARAM_INOUT),
+    array(&$erstellerName, SQLSRV_PARAM_INOUT),
+    array(&$uploadDatum, SQLSRV_PARAM_INOUT),
+    array(&$durchschnittsBewertung, SQLSRV_PARAM_INOUT),
+    array(&$link, SQLSRV_PARAM_INOUT),
+    array(&$text, SQLSRV_PARAM_INOUT)
+);
+$sql = "EXEC usp_funObjektAnzeigen @id = ?, @typ = ?, @titel = ?, @erstellerName = ?, @uploadDatum = ?, @durchschnittsBewertung = ?, @link = ?, @text = ?";
+$stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+if(sqlsrv_execute($stmt)) {
+    sqlsrv_next_result($stmt);
+    sqlsrv_free_stmt($stmt);
+}else{
+    echo print_r(sqlsrv_errors(),true);
+    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Objekt konnte nicht korrekt geladen werden!';
+}
+sqlsrv_close($conn);
 
 ?>
 
 <!-- DETAILS -->
 <div class="row">
     <div class="col-md-7">
-        <!-- TODO Placeholder für funObjekt (bild, video, witz) ersetzen -->
-        <div style="background-color:black;height:300px;width:80%;"></div>
+        <?php
+
+        switch($typ){
+            case 'B':
+                ?>
+        <img src="<?php echo $link; ?>" class="funObjekt_image" />
+        <?php
+                break;
+            case 'W':
+                ?>
+        <div class="objekte_witz"><?php echo $text; ?></div>
+        <?php
+                break;
+            case 'V':
+                ?>
+                <iframe src="<?php echo $link; ?>"></iframe>
+        <?php
+                break;
+        }
+
+        ?>
     </div>
     <div class="col-md-4" id="funObjekt_details">
-        <!-- TODO Placeholder ersetzen -->
-        <div class="row" id="funObjekt_titel">Title Placeholder</div>
-        <div class="row" id="funObjekt_ersteller">von Troll Placeholder</div>
-        <div class="row" id="funObjekt_erstellDatum">Hochgeladen am XX.XX.XXXX</div>
-        <div class="row" id="funObjekt_bewertung">Durchschnittsbewertung:
+        <div class="row" id="funObjekt_titel"><?php echo $titel; ?></div>
+        <div class="row" id="funObjekt_ersteller">von <?php echo $erstellerName; ?></div>
+        <div class="row" id="funObjekt_erstellDatum">Hochgeladen am <?php echo $uploadDatum; ?></div>
+        <div class="row" id="funObjekt_bewertung">Durchschnittsbewertung: <?php echo $durchschnittsBewertung; ?>
+            <!--
             <span class="glyphicon glyphicon-star"></span>
             <span class="glyphicon glyphicon-star"></span>
             <span class="glyphicon glyphicon-star"></span>
             <span class="glyphicon glyphicon-star"></span>
-            <span class="glyphicon glyphicon-star-empty"></span>
+            <span class="glyphicon glyphicon-star-empty"></span>-->
         </div>
         <?php
             if(isset($_SESSION['loginUsername']) && $_SESSION['loginUsername'] != '') {
