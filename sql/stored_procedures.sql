@@ -264,10 +264,7 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
-    @id               INT,
-    @verfasser        VARCHAR(15),
-    @text             VARCHAR(256),
-    @erstellungsDatum DATE
+    @id               INT
 AS
   SELECT
     T.benutzerName,
@@ -287,12 +284,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @typ                    VARCHAR(10),
-    @link                   VARCHAR(256)
+    @limit                  INT
 AS
 
   SELECT
@@ -316,12 +308,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @dauer                  VARCHAR(10),
-    @link                   VARCHAR(256)
+    @limit                  INT
 AS
 
   SELECT
@@ -345,11 +332,7 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024)
+    @limit                  INT
 AS
 
   SELECT
@@ -419,12 +402,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -451,12 +429,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -483,12 +456,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -516,12 +484,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -548,12 +511,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @link                   VARCHAR(256),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
@@ -580,12 +538,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
