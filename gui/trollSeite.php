@@ -73,7 +73,7 @@ $procedure_params = array(
 array($id, SQLSRV_PARAM_IN)
 );
 
-$sql = "EXEC usp_benutzerProfilAnzeigen @id = ?";
+$sql = "EXEC usp_benutzerWitzeAnzeigenNachBewertung @id = ?,@offset = ? ,@limit = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
 if(sqlsrv_execute($stmt)) {
@@ -102,36 +102,36 @@ while($row = sqlsrv_fetch_array($stmt)){
                         </div>
                     </div>
                     <div class="panel-body index_panelbody index_panelleft">
-                        <?php
-
-                        ?>
                     </div>
                 </div>
         </div>
-        <div class="col-md-3">
-                <div class="panel panel-default index_panel">
-                    <div class="panel-body index_panelbody index_panelright">
-                        Beste Bewertungen
-                    </div>
-                    <div class="panel-body index_panelbody index_panelleft">
-                        <div class="col-md-3">
-                            <p style="color: white">Video</p>
-                        </div>
-                        <div class="col-md-3">
-                            <p style="color: white">Bild</p>
-                        </div>
-                        <div class="col-md-3">
-                            <p style="color: white">Witz</p>
-                        </div>
-                    </div>
-                    <div class="panel-body index_panelbody index_panelleft">
-                        <?php
 
+        <div class="col-md-3">
+            <div class="panel panel-default index_panel">
+                <div class="panel-body index_panelbody index_panelright">
+                    Beste Bewertungen
+                </div>
+                <div class="panel-body index_panelbody index_panelleft">
+                    <div class="col-md-3">
+                        <p style="color: white">Video</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p style="color: white">Bild</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p style="color: white">Witz</p>
+                        <?php
+                        echo '<h1>'.$row['text'].'</h1>';
                         ?>
                     </div>
                 </div>
+                <div class="panel-body index_panelbody index_panelleft">
+
+                </div>
+            </div>
         </div>
     </div>
+
 
     <?php
 }
@@ -144,5 +144,4 @@ while($row = sqlsrv_fetch_array($stmt)){
     $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Benutzer konnte nicht erstellt werden!';
     sqlsrv_close($conn);
 }
-
 ?>
