@@ -154,7 +154,7 @@ sqlsrv_close($conn);
         <form method="post" action="index.php?seite=funObjekt&id=<?php echo $_GET['id']; ?>">
             <div class="row" id="funObjekt_writeKommentar">
                 <input type="text" placeholder="Kommentieren..." id="funObjekt_kommentarInputField" name="kommentarText"/>
-                <button type="submit" class="btn btn-primary">Senden</button> <!-- TODO Make button work -->
+                <button type="submit" class="btn btn-primary">Senden</button>
             </div>
         </form>
         <?php
@@ -162,15 +162,48 @@ sqlsrv_close($conn);
 ?>
 
 <!-- TODO Alle verfügbaren Kommentare in diesem Format anzeigen -->
-<div class="row kommentar">
-    <div class="col-md-1">
-        <div style="width:80%;height:40px;background-color:grey"></div>
-    </div>
-    <div class="col-md-10">
-        <div class="row">
-            <div class="kommentar_Head"><span class="kommentar_trollName">Troll</span> am XX.XX.XXXX um XX:XX</div>
-            <span class="kommentar_text">Hier steht ein Placeholder für ein Kommentar!</span>
-        </div>
-    </div>
-</div>
+<?php
+
+$connectionInfo = array( "UID"=>$DB_USERNAME,
+    "PWD"=>$DB_PASSWORD,
+    "Database"=>$DB_NAME);
+
+$conn = sqlsrv_connect($DB_HOST, $connectionInfo);
+
+$procedure_params = array(
+    array($_GET['id'], SQLSRV_PARAM_IN)
+);
+$sql = "EXEC usp_funObjektKommentareLaden @id = ?";
+$stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
+
+if(sqlsrv_execute($stmt)) {
+    do{
+        while($row = sqlsrv_fetch_array($stmt)){
+            ?>
+
+            <div class="row kommentar">
+                <div class="col-md-1">
+                    <div style="width:80%;height:40px;background-color:grey"></div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="kommentar_Head"><span class="kommentar_trollName"><?php echo $row['benutzerName']; ?>
+                            </span> am <?php echo $row['erstellungsDatum']->format('Y-m-d'); ?></div>
+                        <span class="kommentar_text"><?php echo $row['text']; ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <?php
+        }
+    }while(sqlsrv_next_result($stmt));
+
+    sqlsrv_free_stmt($stmt);
+}else{
+    $_SESSION['status'] = 'Ein Fehler ist aufgetreten! Kommentare konnten nicht geladen werden!';
+}
+
+sqlsrv_close($conn);
+
+?>
 <!-- END KOMMENTARE -->

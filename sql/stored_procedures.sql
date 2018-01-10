@@ -264,10 +264,7 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
-    @id               INT,
-    @verfasser        VARCHAR(15),
-    @text             VARCHAR(256),
-    @erstellungsDatum DATE
+    @id               INT
 AS
   SELECT
     T.benutzerName,
