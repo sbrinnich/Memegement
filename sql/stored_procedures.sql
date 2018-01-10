@@ -375,20 +375,17 @@ GO
 
 
 CREATE PROCEDURE [dbo].[usp_benutzerProfilAnzeigen]
-    @id             INT,
-    @benutzerName   VARCHAR(15) OUTPUT,
-    @beitrittsDatum DATE OUTPUT,
-    @link           VARCHAR(256) OUTPUT
+    @id             INT
 AS
   SELECT
-    @benutzerName = A.benutzerName,
-    @beitrittsDatum = A.beitrittsDatum,
-    @link = B.link
+      A.benutzerName,
+      A.beitrittsDatum,
+      B.link
   FROM
     (SELECT *
      FROM Troll
      WHERE id = @id) A
-    JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
+    LEFT JOIN (SELECT * FROM Bild) B ON A.profilBild = B.funObjektId;
 
 GO
 
