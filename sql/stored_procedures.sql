@@ -577,12 +577,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
-    @limit                  INT,
-    @id2                    INT,
-    @titel                  VARCHAR(50),
-    @durchschnittsBewertung FLOAT,
-    @text                   VARCHAR(1024),
-    @datum                  DATE
+    @limit                  INT
 AS
   SELECT
     F.id,
