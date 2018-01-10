@@ -31,7 +31,7 @@ if(sqlsrv_execute($stmt)) {
                             </div>
                         </div>
                         <div class="row objekte_object">
-                            <img src="<?php echo $row['link']; ?>" class="objekte_image" />
+                            <div class="objekte_witz"><?php echo $row['text']; ?></div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 objekte_datum">Hochgeladen am <?php echo $row['uploadDatum']->format('Y-m-d'); ?></div>

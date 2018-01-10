@@ -265,14 +265,14 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_funObjektKommentareLaden]
     @id               INT,
-    @verfasser        VARCHAR(15) OUTPUT,
-    @text             VARCHAR(256) OUTPUT,
-    @erstellungsDatum DATE OUTPUT
+    @verfasser        VARCHAR(15),
+    @text             VARCHAR(256),
+    @erstellungsDatum DATE
 AS
   SELECT
-    @verfasser = T.benutzerName,
-    @text = K.text,
-    @erstellungsDatum = K.erstellungsDatum
+    T.benutzerName,
+    K.text,
+    K.erstellungsDatum
   FROM Kommentar K
     JOIN Troll T ON K.kommentiererID = T.id
   WHERE kommentarObjekt = @id
@@ -287,10 +287,20 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
     @offset                 INT,
-    @limit                  INT
+    @limit                  INT,
+    @id                     INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @typ                    VARCHAR(10),
+    @link                   VARCHAR(256)
 AS
 
-  SELECT F.id, F.titel, F.durchschnittsBewertung, B.typ, B.link, T.benutzerName, F.uploadDatum
+  SELECT
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    B.typ,
+    B.link
   FROM Bild B
     JOIN FunObjekt F ON B.funObjektId = F.id
     JOIN Troll T ON F.erstellerId = T.id
@@ -306,10 +316,20 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
     @offset                 INT,
-    @limit                  INT
+    @limit                  INT,
+    @id                     INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @dauer                  VARCHAR(10),
+    @link                   VARCHAR(256)
 AS
 
-  SELECT F.id, F.titel, F.durchschnittsBewertung, V.dauer, V.link, T.benutzerName, F.uploadDatum
+  SELECT
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    V.dauer,
+    V.link
   FROM Video V
     JOIN FunObjekt F ON V.funObjektId = F.id
     JOIN Troll T ON F.erstellerId = T.id
@@ -325,10 +345,18 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
     @offset                 INT,
-    @limit                  INT
+    @limit                  INT,
+    @id                     INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @text                   VARCHAR(1024)
 AS
 
-  SELECT F.id, F.titel, F.durchschnittsBewertung, W.text, T.benutzerName, F.uploadDatum
+  SELECT
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    W.text
   FROM Witz W
     JOIN FunObjekt F ON W.funObjektId = F.id
     JOIN Troll T ON F.erstellerId = T.id
@@ -389,18 +417,18 @@ CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
     @limit                  INT,
-    @id2                    INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @link                   VARCHAR(256) OUTPUT,
-    @datum                  DATE OUTPUT
+    @id2                    INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @link                   VARCHAR(256),
+    @datum                  DATE
 AS
   SELECT
-    @id2 = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @link = V.link,
-    @datum = F.uploadDatum
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    V.link,
+    F.uploadDatum
   FROM Video V
     JOIN
     (SELECT *
@@ -421,18 +449,18 @@ CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
     @limit                  INT,
-    @id2                    INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @link                   VARCHAR(256) OUTPUT,
-    @datum                  DATE OUTPUT
+    @id2                    INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @link                   VARCHAR(256),
+    @datum                  DATE
 AS
   SELECT
-    @id2 = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @link = B.link,
-    @datum = F.uploadDatum
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    B.link,
+    F.uploadDatum
   FROM Bild B
     JOIN
     (SELECT *
@@ -453,18 +481,18 @@ CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachDatum]
     @id                     INT,
     @offset                 INT,
     @limit                  INT,
-    @id2                    INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @text                   VARCHAR(1024) OUTPUT,
-    @datum                  DATE OUTPUT
+    @id2                    INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @text                   VARCHAR(1024),
+    @datum                  DATE
 AS
   SELECT
-    @id2 = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @text = W.text,
-    @datum = F.uploadDatum
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    W.text,
+    F.uploadDatum
   FROM Witz W
     JOIN
     (SELECT *
@@ -486,18 +514,18 @@ CREATE PROCEDURE [dbo].[usp_benutzerVideosAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
     @limit                  INT,
-    @id2                    INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @link                   VARCHAR(256) OUTPUT,
-    @datum                  DATE OUTPUT
+    @id2                    INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @link                   VARCHAR(256),
+    @datum                  DATE
 AS
   SELECT
-    @id2 = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @link = V.link,
-    @datum = F.uploadDatum
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    V.link,
+    F.uploadDatum
   FROM Video V
     JOIN
     (SELECT *
@@ -518,18 +546,18 @@ CREATE PROCEDURE [dbo].[usp_benutzerBilderAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
     @limit                  INT,
-    @id2                    INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @link                   VARCHAR(256) OUTPUT,
-    @datum                  DATE OUTPUT
+    @id2                    INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @link                   VARCHAR(256),
+    @datum                  DATE
 AS
   SELECT
-    @id2 = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @link = B.link,
-    @datum = F.uploadDatum
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    B.link,
+    F.uploadDatum
   FROM Bild B
     JOIN
     (SELECT *
@@ -550,18 +578,18 @@ CREATE PROCEDURE [dbo].[usp_benutzerWitzeAnzeigenNachBewertung]
     @id                     INT,
     @offset                 INT,
     @limit                  INT,
-    @id2                    INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @text                   VARCHAR(1024) OUTPUT,
-    @datum                  DATE OUTPUT
+    @id2                    INT,
+    @titel                  VARCHAR(50),
+    @durchschnittsBewertung FLOAT,
+    @text                   VARCHAR(1024),
+    @datum                  DATE
 AS
   SELECT
-    @id2 = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @text = W.text,
-    @datum = F.uploadDatum
+    F.id,
+    F.titel,
+    F.durchschnittsBewertung,
+    W.text,
+    F.uploadDatum
   FROM Witz W
     JOIN
     (SELECT *

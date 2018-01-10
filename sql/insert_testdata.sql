@@ -181,7 +181,7 @@ WHILE @Input < 300001
     INSERT INTO FunObjekt(titel, uploadDatum, durchschnittsBewertung, erstellerId)  VALUES
       ('Video'+cast(@Input AS VARCHAR(10)) ,  DATEADD(day, (ABS(CHECKSUM(NEWID())) % 65530), 0) , RAND()*5 , (cast((RAND()*@Input) AS INT)%500000) + 1);
     INSERT INTO Video(funObjektId, dauer, link) VALUES
-      (@Input , '3:33' , 'https://youtu.be/dQw4w9WgXcQ');
+      (@Input , '3:33' , 'https://www.youtube.com/embed/dQw4w9WgXcQ');
     SET @Input = @Input + 1
   END
 GO

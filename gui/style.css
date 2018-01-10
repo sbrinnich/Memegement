@@ -223,3 +223,12 @@ body {
 .funObjekt_container {
     margin-top: 30px;
 }
+
+.objekte_witz {
+    font-size: 20px;
+}
+
+.funObjekt_image {
+    width: 80%;
+    height: 20%;
+}

@@ -31,11 +31,6 @@
             </div>
         </a>
     </div>
-    <?php
-
-    // Redirect zu index wenn nicht eingeloggt
-    if(!isset($_SESSION['loginUsername'])){
-        echo '
             <div class="col-md-3">
                 <a href="index.php?seite=gruppen" class="index_link">
                 <div class="panel panel-default index_panel">
@@ -44,7 +39,6 @@
                     </div>
                 </div>
                 </a>
-            </div>';
-    } ?>
+            </div>
 
 </div>
