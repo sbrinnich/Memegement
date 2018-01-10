@@ -287,22 +287,13 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_bilderAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @typ                    VARCHAR(10) OUTPUT,
-    @link                   VARCHAR(256) OUTPUT
+    @limit                  INT
 AS
 
-  SELECT
-    @id = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @typ = B.typ,
-    @link = B.link
+  SELECT F.id, F.titel, F.durchschnittsBewertung, B.typ, B.link, T.benutzerName, F.uploadDatum
   FROM Bild B
     JOIN FunObjekt F ON B.funObjektId = F.id
+    JOIN Troll T ON F.erstellerId = T.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
@@ -315,22 +306,13 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_videosAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @dauer                  VARCHAR(10) OUTPUT,
-    @link                   VARCHAR(256) OUTPUT
+    @limit                  INT
 AS
 
-  SELECT
-    @id = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @dauer = V.dauer,
-    @link = V.link
+  SELECT F.id, F.titel, F.durchschnittsBewertung, V.dauer, V.link, T.benutzerName, F.uploadDatum
   FROM Video V
     JOIN FunObjekt F ON V.funObjektId = F.id
+    JOIN Troll T ON F.erstellerId = T.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 
@@ -343,20 +325,13 @@ GO
 
 CREATE PROCEDURE [dbo].[usp_witzeAnzeigen]
     @offset                 INT,
-    @limit                  INT,
-    @id                     INT OUTPUT,
-    @titel                  VARCHAR(50) OUTPUT,
-    @durchschnittsBewertung FLOAT OUTPUT,
-    @text                   VARCHAR(1024) OUTPUT
+    @limit                  INT
 AS
 
-  SELECT
-    @id = F.id,
-    @titel = F.titel,
-    @durchschnittsBewertung = F.durchschnittsBewertung,
-    @text = W.text
+  SELECT F.id, F.titel, F.durchschnittsBewertung, W.text, T.benutzerName, F.uploadDatum
   FROM Witz W
     JOIN FunObjekt F ON W.funObjektId = F.id
+    JOIN Troll T ON F.erstellerId = T.id
   ORDER BY F.id
     OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY;
 

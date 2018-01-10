@@ -8,54 +8,43 @@ $conn = sqlsrv_connect( $DB_HOST, $connectionInfo);
 
 $offset = 0;
 $limit = 100;
-$id = 0;
-$titel = '';
-$durchschnittsBewertung = 0.0;
-$typ = '';
-$link = '';
 
 $procedure_params = array(
     array($offset, SQLSRV_PARAM_IN),
-    array($limit, SQLSRV_PARAM_IN),
-    array(&$id, SQLSRV_PARAM_INOUT),
-    array(&$titel, SQLSRV_PARAM_INOUT),
-    array(&$durchschnittsBewertung, SQLSRV_PARAM_INOUT),
-    array(&$typ, SQLSRV_PARAM_INOUT),
-    array(&$link, SQLSRV_PARAM_INOUT)
+    array($limit, SQLSRV_PARAM_IN)
 );
-$sql = "EXEC usp_bilderAnzeigen @offset = ?, @limit = ?, @id = ?, @titel = ?, @durchschnittsBewertung = ?, @typ = ?, @link = ?";
+$sql = "EXEC usp_bilderAnzeigen @offset = ?, @limit = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params);
 
 if(sqlsrv_execute($stmt)) {
-    sqlsrv_next_result($stmt);
-    for($i = 0; $i < $limit-$offset; $i++) {
+    do{
+        while($row = sqlsrv_fetch_array($stmt)){
+            ?>
 
-        ?>
-
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <a href="index.php?seite=funObjekt&id=<?php echo $id; ?>" class="index_link">
-                    <div class="row">
-                        <div class="col-md-12 objekte_titel"><?php echo $titel; ?>
-                            <span class="objekte_ersteller">von Ersteller</span>
+            <div class="row funObjekt_container">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <a href="index.php?seite=funObjekt&id=<?php echo $row['id']; ?>" class="index_link">
+                        <div class="row">
+                            <div class="col-md-12 objekte_titel"><?php echo $row['titel']; ?>
+                                <span class="objekte_ersteller">von <?php echo $row['benutzerName']; ?></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row objekte_object">
-                        <img src="<?php echo $link; ?>" class="objekte_image" />
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 objekte_datum">Hochgeladen am XX.XX.XXXX</div>
-                        <div class="col-md-3 objekte_bewertung">Bewertung: <?php echo $durchschnittsBewertung; ?></div>
-                    </div>
-                </a>
+                        <div class="row objekte_object">
+                            <img src="<?php echo $row['link']; ?>" class="objekte_image" />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 objekte_datum">Hochgeladen am <?php echo $row['uploadDatum']->format('Y-m-d'); ?></div>
+                            <div class="col-md-3 objekte_bewertung">Bewertung: <?php echo $row['durchschnittsBewertung']; ?></div>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <?php
+            <?php
+        }
+    }while(sqlsrv_next_result($stmt));
 
-        sqlsrv_next_result($stmt);
-    }
     sqlsrv_free_stmt($stmt);
 }else{
     echo print_r(sqlsrv_errors(), true);
